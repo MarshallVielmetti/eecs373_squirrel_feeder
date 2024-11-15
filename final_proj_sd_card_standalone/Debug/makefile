@@ -64,8 +64,8 @@ all: main-build
 main-build: final_proj_sd_card_standalone.elf secondary-outputs
 
 # Tool invocations
-final_proj_sd_card_standalone.elf final_proj_sd_card_standalone.map: $(OBJS) $(USER_OBJS) N:\373\final_proj_sd_card_standalone\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "final_proj_sd_card_standalone.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\final_proj_sd_card_standalone\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="final_proj_sd_card_standalone.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+final_proj_sd_card_standalone.elf final_proj_sd_card_standalone.map: $(OBJS) $(USER_OBJS) N:\373\eecs373_squirrel_feeder\final_proj_sd_card_standalone\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "final_proj_sd_card_standalone.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\eecs373_squirrel_feeder\final_proj_sd_card_standalone\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="final_proj_sd_card_standalone.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

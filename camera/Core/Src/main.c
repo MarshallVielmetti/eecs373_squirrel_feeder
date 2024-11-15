@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -28,12 +29,15 @@
 /* USER CODE BEGIN PTD */
 #define VC0706_CMD_PREFIX 0x56
 #define VC0706_SERIAL_NUM 0x00
-#define VC0706_CMD_SET_BAUD 0x24
+#define VC0706_CMD_SET_BAUD 0x31
 #define VC0706_CMD_TAKE_PHOTO 0x36
 #define VC0706_CMD_READ_DATA  0x32
 #define VC0706_CMD_RESET      0x26
+#define VC0706_CMD_STOP_CAPTURE 0x36
+#define VC0706_CMD_READ_DATA_LEN 0x34
 
-#define CAMERA_BUFFER_SIZE 512 // Adjust this based on available memory
+
+#define CAMERA_BUFFER_SIZE 100000 // Adjust this based on available memory
 
 uint8_t cameraBuffer[CAMERA_BUFFER_SIZE];
 
@@ -51,6 +55,8 @@ uint8_t cameraBuffer[CAMERA_BUFFER_SIZE];
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+SPI_HandleTypeDef hspi1;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 
@@ -63,6 +69,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -78,6 +85,11 @@ void VC0706_SendCommand(uint8_t cmd, uint8_t *params, uint8_t params_len) {
     for (uint8_t i = 0; i < params_len; i++) {
         buffer[3 + i] = params[i];
     }
+
+//    for (uint8_t i = 0; i < params_len + 3; i++) {
+//    	HAL_UART_Transmit(&huart3, buffer[i], 1, 1000);
+//    }
+
 
     HAL_UART_Transmit(&huart3, buffer, 3 + params_len, HAL_MAX_DELAY);
 }
@@ -95,61 +107,112 @@ uint8_t VC0706_TakePhoto(void) {
     }
 
     // Check if the received response is as expected: 0x76 0x00 0x36 0x00 0x00
-    if (response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x36 && response[3] == 0x00 && response[4] == 0x00) {
-        return 1; // Success
-    } else {
-        // Unexpected response received, handle accordingly
-        return 0;
+    return response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x36 && response[3] == 0x00 && response[4] == 0x00;
+}
+
+uint16_t VC0706_ReadImageDataLength(void) {
+	uint8_t read_image_len_cmd[] = {0x01, 0x00};
+	VC0706_SendCommand(VC0706_CMD_READ_DATA_LEN, read_image_len_cmd, sizeof(read_image_len_cmd));
+
+	uint8_t response[9];
+	HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 1000);
+
+
+    if (status != HAL_OK) {
+    	return 0;
     }
+
+    uint16_t image_len = (response[7] << 8) | response[8];
+
+    return image_len;
 }
 
 
+uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint16_t start_address, uint16_t image_length) {
+    uint8_t readCommand[13];
 
-uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint32_t bufferSize) {
-    uint32_t address = 0;
-    uint32_t bytesReceived = 0;
-    uint8_t readCommand[8];
+    readCommand[0] = 0x0C;
+    readCommand[1] = 0x00;
+    readCommand[2] = 0x0D;
+    readCommand[3] = 0x00;
+    readCommand[4] = 0x00;
 
-    while (bytesReceived < bufferSize) {
-        uint16_t chunkSize = (bufferSize - bytesReceived > CAMERA_BUFFER_SIZE) ? CAMERA_BUFFER_SIZE : (bufferSize - bytesReceived);
+    readCommand[5] = (start_address >> 8) & 0xFF;
+    readCommand[6] = start_address & 0xFF;
 
-        // Prepare the read command for the camera
-        readCommand[0] = 0x0C;
-        readCommand[1] = 0x00;
-        readCommand[2] = (address >> 8) & 0xFF;
-        readCommand[3] = address & 0xFF;
-        readCommand[4] = (chunkSize >> 8) & 0xFF;
-        readCommand[5] = chunkSize & 0xFF;
-        readCommand[6] = 0x10;
-        readCommand[7] = 0x00;
+    readCommand[7] = 0x00;
+    readCommand[8] = 0x00;
 
-        VC0706_SendCommand(VC0706_CMD_READ_DATA, readCommand, sizeof(readCommand));
+    readCommand[9] = (image_length >> 8) & 0xFF;
+    readCommand[10] = image_length & 0xFF;
 
-        HAL_UART_Receive(&huart3, imageBuffer + bytesReceived, chunkSize, HAL_MAX_DELAY);
-        bytesReceived += chunkSize;
-        address += chunkSize;
+    readCommand[11] = 0x00;
+    readCommand[12] = 0xFF;
+
+    VC0706_SendCommand(VC0706_CMD_READ_DATA, readCommand, sizeof(readCommand));
+
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, imageBuffer, image_length + 14, 10000);
+
+    if (status != HAL_OK) {
+    	return 0;
     }
+
     return 1;
 }
 uint8_t VC0706_SetBaudRate(void) {
-    uint8_t baudRateCommand[] = {0x03, 0x01, 0x0D, 0xA6}; // Set baud to 115200
+    uint8_t baudRateCommand[] = {0x06, 0x04, 0x02, 0x00, 0x08, 0x0D, 0xA6}; // Set baud to 115200
     VC0706_SendCommand(VC0706_CMD_SET_BAUD, baudRateCommand, sizeof(baudRateCommand));
 
     uint8_t response[5];
     HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 5000);
-    return (response[3] == 0x0); // Check if baud rate was set successfully
+    return (response[0] == 0x76 && response[1] == 0x0 && response[2] == 0x31 && response[3] == 0x0); // Check if baud rate was set successfully
 }
 
+uint8_t VC0706_SetResolution(uint8_t resolution) {
+    uint8_t resolutionCommand[] = {0x05, 0x04, 0x01, 0x00, 0x19, resolution}; // WRITE_DATA command parameters
+    VC0706_SendCommand(0x31, resolutionCommand, sizeof(resolutionCommand));
+
+    uint8_t response[6];
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 1000); // Timeout of 1 second
+
+    if (status != HAL_OK) {
+        return 0;
+    }
+
+    // Expected response: 0x76 0x00 0x31 0x00 0x00
+    return response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x31 && response[3] == 0x00;
+}
 
 
 uint8_t VC0706_Reset(void) {
     uint8_t resetCommand[] = {0x00};
     VC0706_SendCommand(VC0706_CMD_RESET, resetCommand, sizeof(resetCommand));
 
-    uint8_t response[4];
+    uint8_t response[5];
     HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 10000);
-    return (response[3] == 0x0); // Check if reset was successful
+    return (response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x26 && response[3] == 0x00); // Check if reset was successful
+//    return response[3] == 0x00;
 }
+
+uint8_t VC0706_StopCapture(void) {
+    uint8_t stopCaptureCommand[] = {0x01, 0x03};
+    uint8_t response[5] = {0}; // Expected response: 0x76 0x00 0x36 0x00 0x00
+
+    // Send the Stop Capture command
+    VC0706_SendCommand(VC0706_CMD_STOP_CAPTURE, stopCaptureCommand, sizeof(stopCaptureCommand));
+
+    // Receive the response
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 1000);
+    if (status != HAL_OK) {
+        return 0; // Indicate failure
+    }
+
+    // Check if the response is as expected
+    return response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x36 && response[3] == 0x00 && response[4] == 0x00;
+}
+
+
+
 
 
 /* USER CODE END 0 */
@@ -185,19 +248,36 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
+  MX_SPI1_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
-//  VC0706_SetBaudRate();
-  int reset = 0;
-  if (VC0706_Reset()){
-	  reset = 1;
+
+  HAL_Delay(2500);
+
+//  int reset = 0;
+//  if (VC0706_Reset()){
+//    reset = 1;
+//  }
+
+  int stop_the_cap = 0;
+  if (VC0706_StopCapture()) {
+	  stop_the_cap = 1;
   }
+
+//  int set_resolution = 0;
+//  if (VC0706_SetResolution(0x00)) {
+//	  set_resolution = 1;
+//  }
+
 //    HAL_Delay(1000);
   int photo = 0;
   // Take a photo
   if (VC0706_TakePhoto()) {
 	  photo = 1;
       // Capture the image into the buffer
-      VC0706_ReadImage(cameraBuffer, sizeof(cameraBuffer));
+	  uint16_t image_len = VC0706_ReadImageDataLength();
+
+      VC0706_ReadImage(cameraBuffer, 0, image_len);
   }
 
   int r = 1;
@@ -257,6 +337,46 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief SPI1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_SPI1_Init(void)
+{
+
+  /* USER CODE BEGIN SPI1_Init 0 */
+
+  /* USER CODE END SPI1_Init 0 */
+
+  /* USER CODE BEGIN SPI1_Init 1 */
+
+  /* USER CODE END SPI1_Init 1 */
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 7;
+  hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+  hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN SPI1_Init 2 */
+
+  /* USER CODE END SPI1_Init 2 */
+
 }
 
 /**
@@ -323,7 +443,7 @@ static void MX_USART3_UART_Init(void)
 
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 115200;
+  huart3.Init.BaudRate = 38400;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;
@@ -377,6 +497,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOG_CLK_ENABLE();
   HAL_PWREx_EnableVddIO2();
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : PE2 PE3 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -423,13 +546,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA4 PA5 PA6 PA7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  /*Configure GPIO pin : SD_CS_Pin */
+  GPIO_InitStruct.Pin = SD_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SD_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB0 */
   GPIO_InitStruct.Pin = GPIO_PIN_0;
