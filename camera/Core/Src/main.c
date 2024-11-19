@@ -22,6 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
+
 
 /* USER CODE END Includes */
 
@@ -38,8 +40,12 @@
 
 
 #define CAMERA_BUFFER_SIZE 100000 // Adjust this based on available memory
+#define CAMERA_READ_SIZE 32		  // Amount of camera data that can be read in one cycle
 
-uint8_t cameraBuffer[CAMERA_BUFFER_SIZE];
+//uint8_t CAMERA_BUFFER[CAMERA_BUFFER_SIZE];
+//uint8_t CAMERA_BUFFER_STATUS = 0; // set to 1 after buffer filled
+//uint32_t CAMERA_BUFFER_OFFSET = 0;
+uint16_t PICTURE_INDEX = 0;
 
 
 /* USER CODE END PTD */
@@ -61,6 +67,8 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
+
+
 
 /* USER CODE END PV */
 
@@ -128,12 +136,14 @@ uint16_t VC0706_ReadImageDataLength(void) {
 }
 
 
-uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint16_t start_address, uint16_t image_length) {
+
+
+uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint32_t start_address) {
     uint8_t readCommand[13];
 
     readCommand[0] = 0x0C;
     readCommand[1] = 0x00;
-    readCommand[2] = 0x0D;
+    readCommand[2] = 0x0A; // was 0D
     readCommand[3] = 0x00;
     readCommand[4] = 0x00;
 
@@ -143,15 +153,19 @@ uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint16_t start_address, uint16_t 
     readCommand[7] = 0x00;
     readCommand[8] = 0x00;
 
-    readCommand[9] = (image_length >> 8) & 0xFF;
-    readCommand[10] = image_length & 0xFF;
+    readCommand[9] = 0x00;
+    readCommand[10] = 0x20;
 
     readCommand[11] = 0x00;
     readCommand[12] = 0xFF;
 
     VC0706_SendCommand(VC0706_CMD_READ_DATA, readCommand, sizeof(readCommand));
 
-    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, imageBuffer, image_length + 14, 10000);
+    return 1;
+}
+
+uint8_t VC0706_RecvImageBlock(uint8_t *temp_buff) {
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, temp_buff, CAMERA_READ_SIZE + 10, 100000);
 
     if (status != HAL_OK) {
     	return 0;
@@ -159,6 +173,86 @@ uint8_t VC0706_ReadImage(uint8_t *imageBuffer, uint16_t start_address, uint16_t 
 
     return 1;
 }
+
+void VC0706_ReadFullImage(uint16_t image_length) {
+//	if (CAMERA_BUFFER_STATUS == 1) {
+//		return; // there is already an image in the camera buffer that hasn't been read to disk
+//	}
+
+	/*
+	 * Start reading data from the camera to the CAMERA_BUFFER
+	 */
+
+	uint8_t img_read_buf[CAMERA_READ_SIZE + 10]; // the plus ten is space for 10 bytes of ACK
+//	memset(img_read_buf, 0xAA, siezof(img_read_buf));
+
+	uint32_t img_start_address = 0;
+
+	FIL fil; 		//File handle
+	FRESULT fres; //Result after operations
+
+	UINT bytesWrote;
+
+	char fname[20];
+
+	sprintf(fname, "picture%d.jpg", PICTURE_INDEX);
+
+	fres = f_open(&fil, fname, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+
+/*	fres = f_write(&fil,test_buf, 3, &bytesWrote);*/
+
+
+	while(img_start_address < image_length) {
+		uint8_t status = VC0706_ReadImage(img_read_buf, img_start_address);
+
+		if (!status) {
+			return;
+		}
+
+//		HAL_Delay(35);
+
+		status = VC0706_RecvImageBlock(img_read_buf);
+
+		if (status == 0) {
+			// failed
+			return;
+		}
+
+		// extract just the image data from the img_read_buf
+//		memcpy(CAMERA_BUFFER + CAMERA_BUFFER_OFFSET, img_read_buf + 5, 32);
+		fres = f_write(&fil, img_read_buf + 5, 32, &bytesWrote);
+
+
+		// check if the end flag
+//		RECEIVED_JPEG_END_FLAG = (img_read_buf[30+5] == 0xFF && img_read_buf[31+5] == 0xD9);
+
+		img_start_address += 0x20;
+//		CAMERA_BUFFER_OFFSET += 0x20;
+	}
+
+	/*
+	 * Final iteration to find end flag
+	 */
+	VC0706_ReadImage(img_read_buf, img_start_address);
+//	memcpy(CAMERA_BUFFER + CAMERA_BUFFER_OFFSET, img_read_buf + 5, 32);
+
+	// find where the end sequence was in the last frame
+	for (uint32_t i = 1; i < 32; i++) {
+		if (img_read_buf[i-1 + 5] == 0xFF && img_read_buf[i + 5] == 0xD9) {
+			// found end sequence
+//			CAMERA_BUFFER_OFFSET += i + 1;
+			fres = f_write(&fil, img_read_buf + 5, i + 1, &bytesWrote);
+			break;
+		}
+	}
+
+	f_close(&fil);
+
+//	CAMERA_BUFFER_STATUS = 1;
+
+}
+
+
 uint8_t VC0706_SetBaudRate(void) {
     uint8_t baudRateCommand[] = {0x06, 0x04, 0x02, 0x00, 0x08, 0x0D, 0xA6}; // Set baud to 115200
     VC0706_SendCommand(VC0706_CMD_SET_BAUD, baudRateCommand, sizeof(baudRateCommand));
@@ -190,6 +284,11 @@ uint8_t VC0706_Reset(void) {
 
     uint8_t response[5];
     HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 10000);
+
+    if (status != HAL_OK) {
+    	return 0;
+    }
+
     return (response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x26 && response[3] == 0x00); // Check if reset was successful
 //    return response[3] == 0x00;
 }
@@ -210,9 +309,6 @@ uint8_t VC0706_StopCapture(void) {
     // Check if the response is as expected
     return response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x36 && response[3] == 0x00 && response[4] == 0x00;
 }
-
-
-
 
 
 /* USER CODE END 0 */
@@ -252,7 +348,17 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_Delay(2500);
+  //some variables for FatFs
+  FATFS FatFs; 	//Fatfs handle
+  FIL fil; 		//File handle
+  FRESULT fres; //Result after operations
+
+  fres = f_mount(&FatFs, "", 1); //1=mount now
+  if (fres != FR_OK) {
+  	while(1);
+  }
+
+  HAL_Delay(2500); // camera startup delay
 
 //  int reset = 0;
 //  if (VC0706_Reset()){
@@ -264,23 +370,24 @@ int main(void)
 	  stop_the_cap = 1;
   }
 
-//  int set_resolution = 0;
-//  if (VC0706_SetResolution(0x00)) {
-//	  set_resolution = 1;
-//  }
+  HAL_Delay(100);
 
-//    HAL_Delay(1000);
+
   int photo = 0;
   // Take a photo
   if (VC0706_TakePhoto()) {
 	  photo = 1;
+
+	  HAL_Delay(100);
       // Capture the image into the buffer
 	  uint16_t image_len = VC0706_ReadImageDataLength();
 
-      VC0706_ReadImage(cameraBuffer, 0, image_len);
+	  VC0706_ReadFullImage(image_len);
   }
 
   int r = 1;
+
+  f_mount(NULL, "", 0);
 
   /* USER CODE END 2 */
 
