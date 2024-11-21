@@ -25,6 +25,4 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32L4xx_HAL_Driver/Src \
-Drivers/hx8357d/src \
-Drivers/ili9341/Src \
 

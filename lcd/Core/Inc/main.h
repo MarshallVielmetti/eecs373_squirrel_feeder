@@ -59,7 +59,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-extern SPI_HandleTypeDef hspi1;
 
 /* USER CODE END Private defines */
 

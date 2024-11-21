@@ -18,15 +18,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32l4xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "ILI9341_STM32_Driver.h"
-#include "ILI9341_GFX.h"
-
-#include "snow_tiger.h"
+#include <string.h>
+#include <stdarg.h>
+#include "ili9341.h"
+#include "fonts.h"
+#include "testimg.h"
 
 /* USER CODE END Includes */
 
@@ -46,9 +46,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
-SPI_HandleTypeDef hspi1;
 
 /* USER CODE END PV */
 
@@ -96,7 +96,10 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  ILI9341_SPI_Init();
+
+  // Initialization Functions
+  ILI9341_Unselect();
+  ILI9341_Init();
 
   /* USER CODE END 2 */
 
@@ -105,14 +108,16 @@ int main(void)
   while (1)
   {
 
-	  ILI9341_Fill_Screen(BLACK);
-	  HAL_Delay(50);
-	  ILI9341_Fill_Screen(WHITE);
-	  HAL_Delay(50);
+	  // Sample Test Program - Can use function calls defined in ili9341.h
+
+	  ILI9341_FillScreen(ILI9341_BLACK);
+
+	  ILI9341_DrawImage((ILI9341_WIDTH - 240)/2,(ILI9341_HEIGHT-240)/2,240,240,
+	  (const uint16_t*)test_img_240x240);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 }
@@ -139,7 +144,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
+  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_7;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -180,11 +185,11 @@ static void MX_SPI1_Init(void)
   hspi1.Instance = SPI1;
   hspi1.Init.Mode = SPI_MODE_MASTER;
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -227,7 +232,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_1, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PE2 PE3 */
   GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
@@ -282,8 +287,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pins : PB0 PB1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

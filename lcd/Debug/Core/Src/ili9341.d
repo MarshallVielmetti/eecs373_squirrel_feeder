@@ -1,6 +1,4 @@
-Drivers/ili9341/Src/ILI9341_STM32_Driver.o: \
- ../Drivers/ili9341/Src/ILI9341_STM32_Driver.c \
- N:/EECS373/LCD_test/Drivers/ili9341/Inc/ILI9341_STM32_Driver.h \
+Core/Src/ili9341.o: ../Core/Src/ili9341.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -28,8 +26,7 @@ Drivers/ili9341/Src/ILI9341_STM32_Driver.o: \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h \
- ../Core/Inc/main.h
-N:/EECS373/LCD_test/Drivers/ili9341/Inc/ILI9341_STM32_Driver.h:
+ ../Core/Inc/ili9341.h ../Core/Inc/fonts.h
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -57,4 +54,5 @@ N:/EECS373/LCD_test/Drivers/ili9341/Inc/ILI9341_STM32_Driver.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h:
-../Core/Inc/main.h:
+../Core/Inc/ili9341.h:
+../Core/Inc/fonts.h:
