@@ -808,7 +808,7 @@ int main(void)
  8000a6a:	481f      	ldr	r0, [pc, #124]	@ (8000ae8 <main+0xa8>)
  8000a6c:	f001 f8fa 	bl	8001c64 <HAL_ADC_GetValue>
  8000a70:	6078      	str	r0, [r7, #4]
-	  	  float voltage = (3.3* ADC_VAL)/4026;
+	  	  float voltage = (3.3* ADC_VAL)/4025.0;
  8000a72:	6878      	ldr	r0, [r7, #4]
  8000a74:	f7ff fd06 	bl	8000484 <__aeabi_ui2d>
  8000a78:	a315      	add	r3, pc, #84	@ (adr r3, 8000ad0 <main+0x90>)
@@ -850,7 +850,7 @@ int main(void)
  8000ad0:	66666666 	.word	0x66666666
  8000ad4:	400a6666 	.word	0x400a6666
  8000ad8:	00000000 	.word	0x00000000
- 8000adc:	40af7400 	.word	0x40af7400
+ 8000adc:	40af7200 	.word	0x40af7200
  8000ae0:	9999999a 	.word	0x9999999a
  8000ae4:	3fb99999 	.word	0x3fb99999
  8000ae8:	20000028 	.word	0x20000028
@@ -1062,7 +1062,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_8;
  8000c00:	4b0e      	ldr	r3, [pc, #56]	@ (8000c3c <MX_ADC1_Init+0xc4>)
  8000c02:	603b      	str	r3, [r7, #0]
   sConfig.Rank = ADC_REGULAR_RANK_1;
@@ -1103,7 +1103,7 @@ static void MX_ADC1_Init(void)
  8000c32:	bd80      	pop	{r7, pc}
  8000c34:	20000028 	.word	0x20000028
  8000c38:	50040000 	.word	0x50040000
- 8000c3c:	04300002 	.word	0x04300002
+ 8000c3c:	21800100 	.word	0x21800100
 
 08000c40 <MX_GPIO_Init>:
   * @brief GPIO Initialization Function

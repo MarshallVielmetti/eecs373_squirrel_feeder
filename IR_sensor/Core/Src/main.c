@@ -101,7 +101,7 @@ int main(void)
 	  	  HAL_ADC_Start(&hadc1);//start conversion
 	  	  HAL_ADC_PollForConversion(&hadc1, 0xFFFFFFFF);//wait for conversion to finish
 	  	  ADC_VAL = HAL_ADC_GetValue(&hadc1);//retrieve value
-	  	  float voltage = (3.3* ADC_VAL)/4026;
+	  	  float voltage = (3.3* ADC_VAL)/4025.0;
 	  	  voltage +=0.1;
 	  	  HAL_Delay(1000);
 
@@ -198,7 +198,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
