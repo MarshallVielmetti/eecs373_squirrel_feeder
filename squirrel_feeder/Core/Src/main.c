@@ -104,6 +104,15 @@ int main(void)
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
+  // initialize file system
+  sdcard_init();
+
+  LOGGER::LOG("test");
+
+  // required camera startup delay
+  HAL_Delay(2500);
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,6 +123,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
   }
+
+  sdcard_cleanup();
+
   /* USER CODE END 3 */
 }
 
@@ -566,6 +578,23 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+/*
+ * mounts the sd card -- if its not found, it blocks forever
+ */
+void sdcard_init(void) {
+	fres = f_mount(&FatFs, "", 1); //1=mount now
+	if (fres != FR_OK) {
+		while(1);
+	}
+}
+
+/*
+ * Unmounts the sd card
+ */
+void sdcard_cleanup(void) {
+	f_mount(NULL, "", 0);
+}
 
 /* USER CODE END 4 */
 

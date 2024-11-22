@@ -1,0 +1,22 @@
+/*
+ * logger.h
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#ifndef INC_LOGGER_H_
+#define INC_LOGGER_H_
+
+struct LOGGER {
+	enum LOGGER_EVENT {
+		SYSTEM_INIT,
+	};
+
+	static void LOG_EVENT(LOGGER_EVENT event);
+	static void LOG(char* DATA);
+};
+
+
+
+#endif /* INC_LOGGER_H_ */

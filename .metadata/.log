@@ -327,3 +327,12 @@ java.lang.Exception: Resource '/LCD' does not exist.
 
 !ENTRY org.eclipse.cdt.core 1 0 2024-11-21 18:07:23.586
 !MESSAGE Indexed 'stepper_motor' (23 sources, 115 headers) in 3.13 sec: 11,109 declarations; 47,075 references; 3 unresolved inclusions; 46 syntax errors; 171 unresolved names (0.29%)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2024-11-21 19:37:08.341
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2024-11-21 19:37:36.649
+!MESSAGE Won't launch debug session since we failed to locate the binary.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug.launch 2 0 2024-11-21 19:38:42.386
+!MESSAGE Won't launch debug session since we failed to locate the binary.

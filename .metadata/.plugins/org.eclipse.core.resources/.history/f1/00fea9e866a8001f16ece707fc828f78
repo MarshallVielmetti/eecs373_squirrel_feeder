@@ -1,0 +1,23 @@
+/*
+ * logger.h
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#ifndef INC_LOGGER_H_
+#define INC_LOGGER_H_
+
+enum LOGGER_EVENT {
+	SYSTEM_INIT,
+};
+
+// logs to sd card
+typedef struct LOGGER {
+	FIL fil;
+	LOGGER(FIL fil); // file handle to be used for logging
+
+	void log_event(LOGGER_EVENT event);
+};
+
+#endif /* INC_LOGGER_H_ */

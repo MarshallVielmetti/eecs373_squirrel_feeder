@@ -1,0 +1,14 @@
+/*
+ * logger.c
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#include "logger.h"
+
+// global logger object
+static void LOGGER::LOG_EVENT(LOGGER_EVENT event) {
+
+}
+static void LOG(char* DATA);

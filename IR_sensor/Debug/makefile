@@ -60,8 +60,8 @@ all: main-build
 main-build: IR_sensor.elf secondary-outputs
 
 # Tool invocations
-IR_sensor.elf IR_sensor.map: $(OBJS) $(USER_OBJS) N:\eecs373\IR_sensor\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "IR_sensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\eecs373\IR_sensor\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="IR_sensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+IR_sensor.elf IR_sensor.map: $(OBJS) $(USER_OBJS) N:\373\eecs373_squirrel_feeder\IR_sensor\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "IR_sensor.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\eecs373_squirrel_feeder\IR_sensor\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="IR_sensor.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

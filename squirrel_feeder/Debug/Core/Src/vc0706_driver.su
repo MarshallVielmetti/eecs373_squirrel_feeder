@@ -1,0 +1,5 @@
+../Core/Src/vc0706_driver.c:41:6:VC0706_SendCommand	40	static
+../Core/Src/vc0706_driver.c:72:9:VC0706_TakePhoto	24	static
+../Core/Src/vc0706_driver.c:93:9:VC0706_StopCapture	24	static
+../Core/Src/vc0706_driver.c:114:10:VC0706_ReadImageDataLength	32	static
+../Core/Src/vc0706_driver.c:136:9:VC0706_ReadImageBlock	40	static

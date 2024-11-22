@@ -1,0 +1,18 @@
+/*
+ * logger.c
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#include "fatfs.h"
+
+// global logger object
+void LOGGER::LOG_EVENT(LOGGER_EVENT event) {
+	// open file and seek till end
+	fres = f_open(&fil, "log.txt", FA_WRITE | FA_OPEN_ALWAYS);
+	fres = f_lseek(&fil, f_size(fil));
+
+}
+
+void LOGGER::LOG(char* DATA);

@@ -1,0 +1,21 @@
+/*
+ * camera.h
+ *
+ * Low level driver implemtatino details for the VC0706 camera
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#ifndef INC_VC0706_DRIVER_H_
+#define INC_VC0706_DRIVER_H_
+
+void VC0706_SendCommand(uint8_t cmd, uint8_t *params, uint8_t params_len);
+
+uint8_t VC0706_TakePhoto(void);
+uint8_t VC0706_StopCapture(void);
+
+uint16_t VC0706_ReadImageDataLength(void);
+uint8_t VC0706_ReadImageBlock(uint8_t *imageBuffer, uint32_t start_address, uint8_t *response_buffer);
+
+#endif /* INC_VC0706_DRIVER_H_ */

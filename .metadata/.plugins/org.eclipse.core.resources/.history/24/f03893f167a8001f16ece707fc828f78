@@ -1,0 +1,15 @@
+/*
+ * logger.c
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#include "logger.h"
+
+// global logger object
+void LOGGER::LOG_EVENT(LOGGER_EVENT event) {
+	fres = f_open(&fil, "log.txt", FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+}
+
+void LOGGER::LOG(char* DATA);

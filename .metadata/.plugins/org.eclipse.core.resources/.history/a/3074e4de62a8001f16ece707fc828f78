@@ -1,0 +1,26 @@
+/*
+ * camera.c
+ *
+ *  Created on: Nov 21, 2024
+ *      Author: mvielmet
+ */
+
+#include "camera.h"
+#include "main.h"
+
+/*
+ * Camera command definitions
+ */
+#define VC0706_SERIAL_NUM 0x00
+#define VC0706_CMD_PREFIX 0x56
+
+#define VC0706_CMD_RESET 0x26
+#define VC0706_CMD_SET_BAUD 0x31
+
+#define VC0706_CMD_TAKE_PHOTO 0x36
+#define VC0706_CMD_STOP_CAPTURE 0x36
+#define VC0706_CMD_READ_DATA 0x32
+#define VC0706_CMD_READ_DATA_LEN 0x34
+
+extern UART_HandleTypeDef CAM_UART_HANDLE; // Define in main.h as huartx
+

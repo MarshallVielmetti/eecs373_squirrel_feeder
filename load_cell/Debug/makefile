@@ -60,8 +60,8 @@ all: main-build
 main-build: load_cell.elf secondary-outputs
 
 # Tool invocations
-load_cell.elf load_cell.map: $(OBJS) $(USER_OBJS) N:\eecs373\load_cell\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "load_cell.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\eecs373\load_cell\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="load_cell.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+load_cell.elf load_cell.map: $(OBJS) $(USER_OBJS) N:\373\eecs373_squirrel_feeder\load_cell\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "load_cell.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\eecs373_squirrel_feeder\load_cell\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="load_cell.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
