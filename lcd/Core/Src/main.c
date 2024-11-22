@@ -27,7 +27,9 @@
 #include "ili9341.h"
 #include "fonts.h"
 #include "testimg.h"
-
+#include "test_squirrel_1.h"
+#include "test_squirrel_2.h"
+#include "test_umich_1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,10 +112,39 @@ int main(void)
 
 	  // Sample Test Program - Can use function calls defined in ili9341.h
 
-	  ILI9341_FillScreen(ILI9341_BLACK);
+	  //ILI9341_FillScreen(ILI9341_BLACK);
 
-	  ILI9341_DrawImage((ILI9341_WIDTH - 240)/2,(ILI9341_HEIGHT-240)/2,240,240,
-	  (const uint16_t*)test_img_240x240);
+	  ILI9341_DrawImage((ILI9341_WIDTH - 320)/2,(ILI9341_HEIGHT-240)/2,320,240,(const uint16_t*)squirrelclip);
+	  HAL_Delay(2000);
+	  ILI9341_FillScreen(ILI9341_WHITE);
+
+
+	  ILI9341_DrawImage((ILI9341_WIDTH - 320)/2,(ILI9341_HEIGHT-213)/2,320,213,(const uint16_t*)squirrelres);
+	  HAL_Delay(2000);
+	  ILI9341_FillScreen(ILI9341_WHITE);
+
+	  ILI9341_DrawImage((ILI9341_WIDTH - 320)/2,(ILI9341_HEIGHT-203)/2,320,203,(const uint16_t*)MLogo);
+	  HAL_Delay(1000);
+	  ILI9341_FillScreen(ILI9341_WHITE);
+
+
+
+	  const char* team1 = "FEED";
+	  const char* team2 = "THE";
+	  const char* team3 = "SQUIRRELS";
+	  const char* class = "from eecs 373";
+	  const char* linebrk = "-*-*-*-*-*-";
+	  const char* squcount = "Squirrels Fed: 4";
+	  const char* flevels = "Food Supply: 50%";
+	  ILI9341_WriteString(10, 10, team1, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 40, team2, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 70, team3, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 100, class, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 130, linebrk, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 160, squcount, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
+	  ILI9341_WriteString(10, 190, flevels, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
+	  HAL_Delay(5000);
+	  ILI9341_FillScreen(ILI9341_WHITE);
 
     /* USER CODE END WHILE */
 
