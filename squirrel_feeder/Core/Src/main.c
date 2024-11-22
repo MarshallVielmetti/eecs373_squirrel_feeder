@@ -110,16 +110,20 @@ int main(void)
   MX_FATFS_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
-  // initialize file system
-  FS_Init();
-  CAMERA_Init();
-
   // required camera startup delay
   HAL_Delay(2500);
 
-  CAMERA_Take_Photo();
+  FS_Init();
+  CAMERA_Init();
 
+  FIL fil;
+  FRESULT fres;
+
+  char fname[10] = "test.txt";
+  fres = f_open(&fil, fname, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+
+
+  CAMERA_Take_Photo();
 
   /* USER CODE END 2 */
 

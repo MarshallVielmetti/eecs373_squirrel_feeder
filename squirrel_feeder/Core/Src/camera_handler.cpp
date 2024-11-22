@@ -73,13 +73,13 @@ uint8_t CAMERA_Process(void) {
 
 
 void Camera::init(void) {
-	this->ready = false;
+	this->ready = true;
 
 	this->cur_image_size = 0;
 	this->cur_image_idx = 0;
 
 	this->pic_index = 0;
-	this->rand_seed = rand() % 1000;
+	this->rand_seed = rand() % 100;
 }
 
 
@@ -110,9 +110,9 @@ uint8_t Camera::take_photo(void) {
 	/*
 	 * Now initialize the file handle
 	 */
-	char img_name[20];
-	sprintf(img_name, "%d-%d.jpg", this->pic_index, this->rand_seed);
-	f_open(&this->file_writer, img_name, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
+	char img_name[9];
+	sprintf(img_name, "im%d.jpg", this->pic_index);
+	FRESULT fres = f_open(&(this->file_writer), img_name, FA_WRITE | FA_OPEN_ALWAYS | FA_CREATE_ALWAYS);
 
 	this->pic_index++;
 
@@ -139,6 +139,11 @@ uint8_t Camera::process(void) {
 }
 
 uint8_t Camera::process_chunk(void) {
+	if (this->cur_image_idx >= this->cur_image_size - CAMERA_READ_IMG_SIZE) {
+		this->finish_image(); // needs to perform the final processing in this->finish_image
+		return 1;
+	}
+
 	uint8_t status = VC0706_ReadImageBlock(this->img_read_buf, this->cur_image_idx);
 
 	if (!status) {
@@ -149,11 +154,6 @@ uint8_t Camera::process_chunk(void) {
 	f_write(&this->file_writer, img_read_buf + 5, CAMERA_READ_IMG_SIZE, &bytes_wrote);
 
 	this->cur_image_idx += 0x20;
-
-	if (this->cur_image_idx >= this->cur_image_size) {
-		this->finish_image(); // needs to perform the final processing in this->finish_image
-		return 1;
-	}
 
 	return 0; //normal case
 }

@@ -73,7 +73,6 @@ void VC0706_SendCommand(uint8_t cmd, uint8_t *params, uint8_t params_len) {
  * Sends take photo command and verifies response ACK
  */
 uint8_t VC0706_TakePhoto(void) {
-	LOG("VC0706_TakePhoto");
     uint8_t takePhotoCommand[] = {0x01, 0x00}; // Parameters for taking a photo
     VC0706_SendCommand(VC0706_CMD_TAKE_PHOTO, takePhotoCommand, sizeof(takePhotoCommand));
 

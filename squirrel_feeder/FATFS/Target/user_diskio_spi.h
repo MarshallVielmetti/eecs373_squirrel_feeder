@@ -18,6 +18,11 @@
 #ifndef _USER_DISKIO_SPI_H
 #define _USER_DISKIO_SPI_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include "integer.h" //from FatFs middleware library
 #include "diskio.h" //from FatFs middleware library
 #include "ff_gen_drv.h" //from FatFs middleware library
@@ -34,5 +39,9 @@ extern DRESULT USER_SPI_read (BYTE pdrv, BYTE *buff, DWORD sector, UINT count);
 #if _USE_IOCTL == 1
   extern DRESULT USER_SPI_ioctl (BYTE pdrv, BYTE cmd, void *buff);
 #endif /* _USE_IOCTL == 1 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
