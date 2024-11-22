@@ -8,13 +8,13 @@ C_SRCS += \
 ../FATFS/Target/user_diskio.c \
 ../FATFS/Target/user_diskio_spi.c 
 
-OBJS += \
-./FATFS/Target/user_diskio.o \
-./FATFS/Target/user_diskio_spi.o 
-
 C_DEPS += \
 ./FATFS/Target/user_diskio.d \
 ./FATFS/Target/user_diskio_spi.d 
+
+OBJS += \
+./FATFS/Target/user_diskio.o \
+./FATFS/Target/user_diskio_spi.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes

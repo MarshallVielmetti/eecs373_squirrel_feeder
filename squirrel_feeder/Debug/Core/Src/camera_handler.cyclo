@@ -1,0 +1,8 @@
+../Core/Src/camera_handler.cpp:62:6:void CAMERA_Init()	1
+../Core/Src/camera_handler.cpp:66:9:uint8_t CAMERA_Take_Photo()	1
+../Core/Src/camera_handler.cpp:70:9:uint8_t CAMERA_Process()	1
+../Core/Src/camera_handler.cpp:75:6:void Camera::init()	1
+../Core/Src/camera_handler.cpp:86:9:uint8_t Camera::take_photo()	4
+../Core/Src/camera_handler.cpp:130:9:uint8_t Camera::process()	4
+../Core/Src/camera_handler.cpp:141:9:uint8_t Camera::process_chunk()	3
+../Core/Src/camera_handler.cpp:161:6:void Camera::finish_image()	4

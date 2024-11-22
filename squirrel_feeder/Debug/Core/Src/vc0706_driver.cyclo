@@ -1,5 +1,5 @@
-../Core/Src/vc0706_driver.c:41:6:VC0706_SendCommand	2
-../Core/Src/vc0706_driver.c:72:9:VC0706_TakePhoto	7
-../Core/Src/vc0706_driver.c:93:9:VC0706_StopCapture	7
-../Core/Src/vc0706_driver.c:114:10:VC0706_ReadImageDataLength	2
-../Core/Src/vc0706_driver.c:136:9:VC0706_ReadImageBlock	1
+../Core/Src/vc0706_driver.cpp:44:6:void VC0706_SendCommand(uint8_t, uint8_t*, uint8_t)	2
+../Core/Src/vc0706_driver.cpp:75:9:uint8_t VC0706_TakePhoto()	7
+../Core/Src/vc0706_driver.cpp:97:9:uint8_t VC0706_StopCapture()	7
+../Core/Src/vc0706_driver.cpp:118:10:uint16_t VC0706_ReadImageDataLength()	2
+../Core/Src/vc0706_driver.cpp:140:9:uint8_t VC0706_ReadImageBlock(uint8_t*, uint32_t)	1

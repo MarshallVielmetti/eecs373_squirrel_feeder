@@ -18,6 +18,6 @@ uint8_t VC0706_TakePhoto(void);
 uint8_t VC0706_StopCapture(void);
 
 uint16_t VC0706_ReadImageDataLength(void);
-uint8_t VC0706_ReadImageBlock(uint8_t *imageBuffer, uint32_t start_address, uint8_t *response_buffer);
+uint8_t VC0706_ReadImageBlock(uint8_t *image_buffer, uint32_t start_address);
 
 #endif /* INC_VC0706_DRIVER_H_ */

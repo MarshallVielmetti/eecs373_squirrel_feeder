@@ -7,6 +7,7 @@
 
 #include <vc0706_driver.h>
 #include "main.h"
+#include "logger.h"
 
 /*
  * Camera command definitions
@@ -24,6 +25,8 @@
 
 #define VC0706_RESPONSE_TIMEOUT 1000
 #define VC0706_IMAGE_BLOCK_SIZE 32
+
+#define CAM_UART_HANDLE huart3
 
 extern UART_HandleTypeDef CAM_UART_HANDLE; // Define in main.h as huartx
 
@@ -70,6 +73,7 @@ void VC0706_SendCommand(uint8_t cmd, uint8_t *params, uint8_t params_len) {
  * Sends take photo command and verifies response ACK
  */
 uint8_t VC0706_TakePhoto(void) {
+	LOG("VC0706_TakePhoto");
     uint8_t takePhotoCommand[] = {0x01, 0x00}; // Parameters for taking a photo
     VC0706_SendCommand(VC0706_CMD_TAKE_PHOTO, takePhotoCommand, sizeof(takePhotoCommand));
 
@@ -131,9 +135,9 @@ uint16_t VC0706_ReadImageDataLength(void) {
 /* VC0706_ReadImageBlock
  * Sends the read image command, and then receives one block of image data into the provided buffer
  *
- * feeds the entire response into the respones_buffer, which is 42 bytes
+ * feeds the entire response into the image_buffer, which is at least 42 bytes
  */
-uint8_t VC0706_ReadImageBlock(uint8_t *imageBuffer, uint32_t start_address, uint8_t *response_buffer) {
+uint8_t VC0706_ReadImageBlock(uint8_t *image_buffer, uint32_t start_address) {
     uint8_t readCommand[13];
 
     readCommand[0] = 0x0C;
@@ -156,7 +160,7 @@ uint8_t VC0706_ReadImageBlock(uint8_t *imageBuffer, uint32_t start_address, uint
 
     VC0706_SendCommand(VC0706_CMD_READ_DATA, readCommand, sizeof(readCommand));
 
-    HAL_StatusTypeDef status = HAL_UART_Receive(&CAM_UART_HANDLE, response_buffer, VC0706_IMAGE_BLOCK_SIZE + 10, VC0706_RESPONSE_TIMEOUT);
+    HAL_StatusTypeDef status = HAL_UART_Receive(&CAM_UART_HANDLE, image_buffer, VC0706_IMAGE_BLOCK_SIZE + 10, VC0706_RESPONSE_TIMEOUT);
 
     return status == HAL_OK;
 }

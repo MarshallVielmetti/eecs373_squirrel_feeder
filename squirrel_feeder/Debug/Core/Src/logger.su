@@ -1,0 +1,4 @@
+../Core/Src/logger.cpp:28:6:static void LOGGER::LOG(char*)	24	static
+../Core/Src/logger.cpp:37:6:static void LOGGER::LOG_EVENT(EVENT)	48	static
+../Core/Src/logger.cpp:55:6:void LOG_EVENT(EVENT)	16	static
+../Core/Src/logger.cpp:62:6:void LOG(char*)	16	static

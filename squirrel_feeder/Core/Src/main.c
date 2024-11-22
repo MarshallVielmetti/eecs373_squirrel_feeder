@@ -17,11 +17,13 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include "camera_handler.h"
 #include "main.h"
 #include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+//#include "camera_handler.h"
 
 /* USER CODE END Includes */
 
@@ -60,7 +62,12 @@ static void MX_SPI3_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
+static void FS_Init(void);
+static void FS_Cleanup(void);
 
+//extern void CAMERA_Init(void);
+//extern uint8_t CAMERA_Take_Photo(void);
+//extern uint8_t CAMERA_Process(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -105,26 +112,27 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // initialize file system
-  sdcard_init();
-
-  LOGGER::LOG("test");
+  FS_Init();
+  CAMERA_Init();
 
   // required camera startup delay
   HAL_Delay(2500);
+
+  CAMERA_Take_Photo();
 
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  while (!CAMERA_Process())
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
 
-  sdcard_cleanup();
+  FS_Cleanup();
 
   /* USER CODE END 3 */
 }
@@ -582,7 +590,9 @@ static void MX_GPIO_Init(void)
 /*
  * mounts the sd card -- if its not found, it blocks forever
  */
-void sdcard_init(void) {
+static void FS_Init(void) {
+	FATFS FatFs; 	//Fatfs handle
+	FRESULT fres; 	//Result after operations
 	fres = f_mount(&FatFs, "", 1); //1=mount now
 	if (fres != FR_OK) {
 		while(1);
@@ -592,7 +602,7 @@ void sdcard_init(void) {
 /*
  * Unmounts the sd card
  */
-void sdcard_cleanup(void) {
+static void FS_Cleanup(void) {
 	f_mount(NULL, "", 0);
 }
 
