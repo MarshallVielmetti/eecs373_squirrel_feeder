@@ -24,6 +24,7 @@ C_DEPS :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
+Drivers/LCD/Src \
 Drivers/STM32L4xx_HAL_Driver/Src \
 FATFS/App \
 FATFS/Target \

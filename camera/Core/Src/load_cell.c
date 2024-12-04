@@ -1,0 +1,103 @@
+/*
+ * load_cell.c
+ *
+ *  Created on: Dec 3, 2024
+ *      Author: mvielmet
+ */
+
+#include "load_cell.h"
+#include "main.h"
+
+/*
+ * Make sure to correctly rename pins in ioc
+ * PS0_DATA, PS0_CLK
+ *
+ * PS1_DATA, PS1_CLK
+ */
+
+// scaling
+#define PS0_TARE 8482978
+//static uint32_t tare = 8482978; // set to zero value
+static float knownOriginal = 1;  // in milli gram
+static float knownHX711 = 1;
+
+extern TIM_HandleTypeDef PS_TIMER_HANDLE;
+
+static int CURRENT_READING = 0;
+
+
+/*
+ * Really short delay function
+ */
+static void microDelay(uint16_t delay)
+{
+	return;
+  __HAL_TIM_SET_COUNTER(&PS_TIMER_HANDLE, 0);
+  while (__HAL_TIM_GET_COUNTER(&PS_TIMER_HANDLE) < delay);
+}
+
+/*
+ * reads in data value from HX711
+ */
+static int32_t getHX711(void)
+{
+  uint32_t data = 0;
+  uint32_t startTime = HAL_GetTick();
+  while(HAL_GPIO_ReadPin(PS0_DATA_GPIO_Port, PS0_DATA_Pin) == GPIO_PIN_SET)
+  {
+    if(HAL_GetTick() - startTime > 200)
+      return 0;
+  }
+
+  for(int8_t len=0; len<24 ; len++)
+  {
+    HAL_GPIO_WritePin(PS0_CLK_GPIO_Port, PS0_CLK_Pin, GPIO_PIN_SET);
+    microDelay(1);
+    data = data << 1;
+    HAL_GPIO_WritePin(PS0_CLK_GPIO_Port, PS0_CLK_Pin, GPIO_PIN_RESET);
+    microDelay(1);
+    if(HAL_GPIO_ReadPin(PS0_DATA_GPIO_Port, PS0_DATA_Pin) == GPIO_PIN_SET)
+      data ++;
+  }
+
+  data = data ^ 0x800000;
+
+  /*
+   * END BIT
+   */
+  HAL_GPIO_WritePin(PS0_CLK_GPIO_Port, PS0_CLK_Pin, GPIO_PIN_SET);
+  microDelay(1);
+  HAL_GPIO_WritePin(PS0_CLK_GPIO_Port, PS0_CLK_Pin, GPIO_PIN_RESET);
+  microDelay(1);
+
+  return data;
+}
+
+
+static int weigh()
+{
+  int32_t  total = 0;
+  int32_t  samples = 50;
+  int milligram;
+  float coefficient;
+
+  for(uint16_t i=0 ; i<samples ; i++)
+  {
+      total += getHX711();
+  }
+  int32_t average = (int32_t)(total / samples);
+  coefficient = knownOriginal / knownHX711;
+  milligram = (int)(average-PS0_TARE)*coefficient;
+  return milligram;
+}
+
+
+void ps_init() {};
+
+void ps_isr() {
+	CURRENT_READING = weigh();
+}
+
+int ps_get_reading() {
+	return CURRENT_READING;
+}

@@ -14,6 +14,7 @@ RM := rm -rf
 -include FATFS/Target/subdir.mk
 -include FATFS/App/subdir.mk
 -include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk
+-include Drivers/LCD/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
@@ -64,8 +65,8 @@ all: main-build
 main-build: camera.elf secondary-outputs
 
 # Tool invocations
-camera.elf camera.map: $(OBJS) $(USER_OBJS) N:\373\eecs373_squirrel_feeder\camera\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "camera.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\eecs373_squirrel_feeder\camera\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="camera.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+camera.elf camera.map: $(OBJS) $(USER_OBJS) C:\Users\nehakan\Downloads\camera\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "camera.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\nehakan\Downloads\camera\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="camera.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

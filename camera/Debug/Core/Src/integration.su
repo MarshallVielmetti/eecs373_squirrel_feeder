@@ -1,0 +1,3 @@
+../Core/Src/integration.c:16:6:perform_startup_routine	40	static
+../Core/Src/integration.c:45:6:simple_IR_trigger	24	static
+../Core/Src/integration.c:60:6:camera_test	8	static

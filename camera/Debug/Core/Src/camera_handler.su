@@ -1,0 +1,6 @@
+../Core/Src/camera_handler.c:42:6:camera_init	8	static
+../Core/Src/camera_handler.c:54:9:camera_take_photo	24	static
+../Core/Src/camera_handler.c:105:13:finish_image	16	static
+../Core/Src/camera_handler.c:125:16:process_chunk	16	static
+../Core/Src/camera_handler.c:146:9:camera_process	16	static
+../Core/Src/camera_handler.c:157:9:camera_get_ready	4	static
