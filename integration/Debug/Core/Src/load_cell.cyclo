@@ -1,0 +1,6 @@
+../Core/Src/load_cell.c:32:13:microDelay	1
+../Core/Src/load_cell.c:42:16:getHX711	5
+../Core/Src/load_cell.c:77:12:weigh	2
+../Core/Src/load_cell.c:95:6:ps_init	1
+../Core/Src/load_cell.c:97:6:ps_isr	1
+../Core/Src/load_cell.c:101:5:ps_get_reading	1

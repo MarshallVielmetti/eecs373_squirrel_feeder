@@ -1,0 +1,4 @@
+../Core/Src/ir_sensor.c:30:6:ir_sensor_init	16	static
+../Core/Src/ir_sensor.c:37:14:read_distance	24	static
+../Core/Src/ir_sensor.c:52:6:ir_sensor_interrupt_routine	16	static
+../Core/Src/ir_sensor.c:59:7:get_cur_distance_average	16	static

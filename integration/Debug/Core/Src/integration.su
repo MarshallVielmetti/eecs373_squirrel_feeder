@@ -1,0 +1,5 @@
+../Core/Src/integration.c:33:6:init_peripherals	8	static
+../Core/Src/integration.c:53:6:main_isr	8	static
+../Core/Src/integration.c:74:6:perform_startup_routine	24	static
+../Core/Src/integration.c:103:6:simple_IR_trigger	24	static
+../Core/Src/integration.c:118:6:camera_test	8	static
