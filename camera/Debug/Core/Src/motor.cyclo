@@ -1,3 +1,0 @@
-../Core/Src/motor.c:38:13:stepper_rotate_clockwise	2
-../Core/Src/motor.c:48:6:stepper_rotate_clockwise_ir	3
-../Core/Src/motor.c:69:6:stepper_rotate_clockwise_steps	2

@@ -1,3 +1,0 @@
-../Core/Src/load_cell.c:30:13:microDelay	1
-../Core/Src/load_cell.c:40:16:getHX711	5
-../Core/Src/load_cell.c:75:5:weigh	2
