@@ -1,6 +1,7 @@
 ../Core/Src/camera_handler.c:42:6:camera_init	1
-../Core/Src/camera_handler.c:54:9:camera_take_photo	4
+../Core/Src/camera_handler.c:56:9:camera_take_photo	4
 ../Core/Src/camera_handler.c:105:13:finish_image	4
-../Core/Src/camera_handler.c:125:16:process_chunk	3
-../Core/Src/camera_handler.c:146:9:camera_process	3
-../Core/Src/camera_handler.c:157:9:camera_get_ready	1
+../Core/Src/camera_handler.c:124:16:process_chunk	3
+../Core/Src/camera_handler.c:144:10:camera_get_percent_done	1
+../Core/Src/camera_handler.c:149:9:camera_process	3
+../Core/Src/camera_handler.c:162:9:camera_get_ready	1

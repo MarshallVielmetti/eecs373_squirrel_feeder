@@ -2,5 +2,7 @@
 ../Core/Src/load_cell.c:42:16:getHX711	5
 ../Core/Src/load_cell.c:77:12:weigh	2
 ../Core/Src/load_cell.c:95:6:ps_init	1
-../Core/Src/load_cell.c:97:6:ps_isr	1
-../Core/Src/load_cell.c:101:5:ps_get_reading	1
+../Core/Src/load_cell.c:99:6:ps_take_reading	1
+../Core/Src/load_cell.c:104:5:ps_get_reading	1
+../Core/Src/load_cell.c:110:6:ps_set_needs_reading	1
+../Core/Src/load_cell.c:115:6:ps_needs_reading	1

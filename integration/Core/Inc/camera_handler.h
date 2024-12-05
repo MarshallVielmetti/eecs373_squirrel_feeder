@@ -29,5 +29,7 @@ uint8_t camera_process();
 
 uint8_t camera_get_ready();
 
+uint32_t camera_get_percent_done();
+
 
 #endif /* INC_CAMERA_HANDLER_H_ */

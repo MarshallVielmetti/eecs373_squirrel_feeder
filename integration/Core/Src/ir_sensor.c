@@ -29,10 +29,12 @@ static uint8_t distance_idx = 0;
 
 
 void ir_sensor_init() {
+	printf("Initializing IR Sensor...");
 	// make sure doesn't auto trigger without readings
 	for (uint8_t i = 0; i < NUM_MEASUREMENTS_TO_AVG; i++) {
 		distance_measurements[i] = 1000;
 	}
+	printf(" Successful!\n\r");
 }
 
 static float read_distance() {

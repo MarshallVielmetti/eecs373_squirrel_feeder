@@ -27,6 +27,9 @@ typedef struct FeederType {
 
 	// Whether or not the feeder is out of food
 	bool out_of_food;
+
+	// whether or not the camera needs to take a picture
+	bool needs_to_take_picture;
 } Feeder;
 
 // This must be called first -- initializes main system objects
@@ -41,6 +44,8 @@ void main_isr();
 void perform_startup_routine();
 
 void simple_IR_trigger();
+
+Feeder *get_feeder();
 
 
 // External functions

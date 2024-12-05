@@ -40,6 +40,7 @@ static FIL file_writer;
  */
 
 void camera_init(void) {
+	printf("Initializing Camera... ");
 	image_size = 0;
 	cur_image_idx = 0;
 
@@ -49,6 +50,7 @@ void camera_init(void) {
 	rand_seed = rand() % 100;
 
 	camera_ready = true;
+	printf(" Successful!\n\r");
 }
 
 uint8_t camera_take_photo(void) {
@@ -97,8 +99,6 @@ uint8_t camera_take_photo(void) {
 	cur_image_idx = 0;
 	camera_ready = 0; // no longer ready to take a new photo
 
-	HAL_TIM_Base_Start_IT(&CAM_TIMER_HANDLE);
-
 	return 1;
 }
 
@@ -117,9 +117,8 @@ static void finish_image(void) {
 
 	f_close(&file_writer);
 
-	HAL_TIM_Base_Stop_IT(&CAM_TIMER_HANDLE);
-
 	camera_ready = true; // ready to take a new image
+	printf("Camera Processing Completed!\n\r");
 }
 
 static uint8_t process_chunk(void) {
@@ -142,8 +141,13 @@ static uint8_t process_chunk(void) {
 	return 0; //normal case
 }
 
+uint32_t camera_get_percent_done() {
+	return (100 * cur_image_idx) / image_size;
+}
+
 
 uint8_t camera_process(void) {
+	printf("Camera Processing Image - %d%% Completed\n\r", camera_get_percent_done());
 	uint8_t end_flag = 0;
 	uint8_t num_chunks_processed = 0;
 
@@ -153,6 +157,7 @@ uint8_t camera_process(void) {
 
 	return end_flag; // 1 means the last chunk was read
 }
+
 
 uint8_t camera_get_ready() {
 	return camera_ready;

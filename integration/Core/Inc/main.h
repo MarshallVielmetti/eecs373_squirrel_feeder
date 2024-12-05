@@ -117,9 +117,9 @@ void Error_Handler(void);
 #define IR0_ADC_CHANNEL ADC_CHANNEL_13
 #define IR1_ADC_CHANNEL ADC_CHANNEL_14
 
-#define CAM_TIMER_HANDLE htim3
 #define MOTOR_TIMER_HANDLE htim4
 #define IR_SENSOR_TIMER_HANDLE htim5
+#define LCD_TIMER_HANDLE htim15
 #define MAIN_TIMER_HANDLE htim16
 
 /* USER CODE END Private defines */

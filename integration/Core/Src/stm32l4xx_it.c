@@ -26,7 +26,10 @@
 #include "motor.h"
 #include "ir_sensor.h"
 #include "load_cell.h"
+#include "lcd.h"
 #include "integration.h"
+
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,7 +63,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim15;
@@ -217,7 +219,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)
   /* USER CODE END TIM1_BRK_TIM15_IRQn 0 */
   HAL_TIM_IRQHandler(&htim15);
   /* USER CODE BEGIN TIM1_BRK_TIM15_IRQn 1 */
-
+  lcd_isr();
   /* USER CODE END TIM1_BRK_TIM15_IRQn 1 */
 }
 
@@ -235,25 +237,6 @@ void TIM1_UP_TIM16_IRQHandler(void)
   main_isr();
 
   /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
-}
-
-/**
-  * @brief This function handles TIM3 global interrupt.
-  */
-void TIM3_IRQHandler(void)
-{
-  /* USER CODE BEGIN TIM3_IRQn 0 */
-
-  /* USER CODE END TIM3_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim3);
-  /* USER CODE BEGIN TIM3_IRQn 1 */
-
-  // camera not ready means that it has taken a photo and needs to be written
-  if (!camera_get_ready()) {
-	  camera_process(); //process a "chunk" of data
-  }
-
-  /* USER CODE END TIM3_IRQn 1 */
 }
 
 /**
@@ -284,7 +267,8 @@ void TIM5_IRQHandler(void)
   /* USER CODE BEGIN TIM5_IRQn 1 */
 
   ir_sensor_interrupt_routine();
-  ps_isr();
+  ps_set_needs_reading(true);
+//  ps_isr();
 
   /* USER CODE END TIM5_IRQn 1 */
 }

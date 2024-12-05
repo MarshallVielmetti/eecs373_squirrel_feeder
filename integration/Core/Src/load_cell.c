@@ -94,10 +94,24 @@ static int weigh()
 
 void ps_init() {};
 
-void ps_isr() {
+static bool NEEDS_READING = false;
+
+void ps_take_reading() {
+	NEEDS_READING = false;
 	CURRENT_READING = weigh();
 }
 
 int ps_get_reading() {
 	return CURRENT_READING;
+}
+
+
+// sets whether or not the pressure sensor needs to take a reading
+void ps_set_needs_reading(bool val) {
+	NEEDS_READING = val;
+}
+
+// returns whether or not the pressure sensor needs to take a reading
+bool ps_needs_reading() {
+	return NEEDS_READING;
 }
