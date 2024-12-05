@@ -1,5 +1,0 @@
-../Core/Src/vc0706_driver.cpp:44:6:void VC0706_SendCommand(uint8_t, uint8_t*, uint8_t)	40	static
-../Core/Src/vc0706_driver.cpp:75:9:uint8_t VC0706_TakePhoto()	24	static
-../Core/Src/vc0706_driver.cpp:96:9:uint8_t VC0706_StopCapture()	24	static
-../Core/Src/vc0706_driver.cpp:117:10:uint16_t VC0706_ReadImageDataLength()	32	static
-../Core/Src/vc0706_driver.cpp:139:9:uint8_t VC0706_ReadImageBlock(uint8_t*, uint32_t)	32	static
