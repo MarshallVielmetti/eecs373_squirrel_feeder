@@ -1,0 +1,18 @@
+
+
+#ifndef INC_LCD_H_
+#define INC_LCD_H_
+
+/*
+ * Tells the LCD to display a picture of a squirrel
+ */
+void squirrel_clip();
+
+void squirrel_res();
+
+void m_logo();
+
+void display_stats(int weight, int squirrel_count);
+void lcd_between();
+
+#endif INC_LCD_H_

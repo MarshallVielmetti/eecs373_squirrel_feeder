@@ -1,5 +1,7 @@
-../Core/Src/integration.c:33:6:init_peripherals	1
-../Core/Src/integration.c:53:6:main_isr	6
-../Core/Src/integration.c:74:6:perform_startup_routine	2
-../Core/Src/integration.c:103:6:simple_IR_trigger	3
-../Core/Src/integration.c:118:6:camera_test	1
+../Core/Src/integration.c:38:6:init_peripherals	1
+../Core/Src/integration.c:66:6:main_isr	6
+../Core/Src/integration.c:88:13:waiting_for_squirrel_isr	2
+../Core/Src/integration.c:94:13:detected_squirrel_isr	2
+../Core/Src/integration.c:108:13:dispensing_isr	3
+../Core/Src/integration.c:140:13:cooldown_isr	2
+../Core/Src/integration.c:150:13:out_of_food_isr	2

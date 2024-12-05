@@ -33,8 +33,8 @@ Drivers/LCD/Src/ili9341.o: ../Drivers/LCD/Src/ili9341.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/ili9341.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/ili9341.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -69,5 +69,5 @@ Drivers/LCD/Src/ili9341.o: ../Drivers/LCD/Src/ili9341.c \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/ili9341.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/ili9341.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h:

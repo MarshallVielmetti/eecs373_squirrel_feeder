@@ -29,6 +29,7 @@ void display_stats(int weight, int squirrel_count) {
 	const char* team3 = "SQUIRRELS";
 	const char* class = "FROM EECS 373";
 	const char* linebrk = "-*-*-*-*-*-";
+
 	// Needs help
 	char strSquirrels[4];
 	sprintf(strSquirrels, "%d", squirrel_count);
@@ -37,11 +38,16 @@ void display_stats(int weight, int squirrel_count) {
 
 	const char* squcount = strcat("Squirrels Fed: ", strSquirrels);
 	const char* flevels = strcat("Food Dispensed: ", strWeight);
+
+	// FEED THE SQUIRRELS FROM EECS 383 -*-*-*-*-*
 	ILI9341_WriteString(10, 10, team1, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
 	ILI9341_WriteString(10, 40, team2, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
 	ILI9341_WriteString(10, 70, team3, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
 	ILI9341_WriteString(10, 100, class, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
 	ILI9341_WriteString(10, 130, linebrk, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
+
+	// Squirrels Fed: squcount
+	// Food Dispensed: strWeight
 	ILI9341_WriteString(10, 160, squcount, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
 	ILI9341_WriteString(10, 190, flevels, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
 }

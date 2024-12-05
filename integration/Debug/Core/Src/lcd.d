@@ -33,12 +33,12 @@ Core/Src/lcd.o: ../Core/Src/lcd.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/ili9341.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_squirrel_1.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_squirrel_2.h \
- N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_umich_1.h
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/ili9341.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_squirrel_1.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_squirrel_2.h \
+ C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_umich_1.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -74,9 +74,9 @@ Core/Src/lcd.o: ../Core/Src/lcd.c ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/ili9341.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/fonts.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_squirrel_1.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_squirrel_2.h:
-N:/373/eecs373_squirrel_feeder-started_integration_fr_ok/eecs373_squirrel_feeder-started_integration_fr_ok/camera/Drivers/LCD/Inc/test_umich_1.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/ili9341.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/fonts.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_squirrel_1.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_squirrel_2.h:
+C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc/test_umich_1.h:

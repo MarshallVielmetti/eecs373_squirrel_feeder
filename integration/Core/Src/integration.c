@@ -14,26 +14,25 @@
 #include "lcd.h"
 
 #include <stdint.h>
+#include <stdbool.h>
 
 extern TIM_HandleTypeDef IR_SENSOR_TIMER_HANDLE;
 extern TIM_HandleTypeDef MAIN_TIMER_HANDLE;
 
+
+// DECLARATION OF FEEDER OBJECT
+static Feeder feeder;
+
+#define IR_DISTANCE_THRESHOLD 1.5 	// Threshold to determine IR sensor trigger - Need to confirm voltage vs. distance for IR sensor reading
+#define PS_FOOD_THRESHOLD 5000		// Max weight (mg) of food on tray
+#define PS_RESET_THRESHOLD 10000	// Put your hand on the feeder to reset it from the out_of_food state after refill
+#define COOLDOWN_ISR_ITERATIONS 20
+#define MAX_DISPENSE_ITERATIONS 5
+
+uint8_t error_state = 0;	 		// Error catching for camera capture
+
 extern int weight;
 extern int squirrel_count;
-
-enum FeederStateType {
-	WAITING_FOR_SQUIRREL,
-	DETECTED_SQUIRREL,
-	DISPENSING,
-	COOLDOWN,
-	OUT_OF_FOOD
-} FeederState;
-
-float IR_DISTANCE_THRESHOLD = 1.5; 	// Threshold to determine IR sensor trigger - Need to confirm voltage vs. distance for IR sensor reading
-int PS_FOOD_THRESHOLD = 5000;		// Max weight (mg) of food on tray
-int cool_down_time = 5000;			// Time that system waits after dispensing food
-uint8_t error_state = 0;	 		// Error catching for camera capture
-extern bool out_of_food = false;	// Condition flag for when dispenser is jammed/out of food
 
 
 void init_peripherals() {
@@ -46,18 +45,28 @@ void init_peripherals() {
 
 	ir_sensor_init();
 	ps_init();
-	lcd_init();
+	lcd_init(&feeder);
 
-	FeederState = WAITING_FOR_SQUIRREL;
+	feeder.state = WAITING_FOR_SQUIRREL;
+	feeder.squirrel_count = 0;
+	feeder.out_of_food = false;
 
 	// start main timer
 	HAL_TIM_Base_Start_IT(&MAIN_TIMER_HANDLE);
 
 }
 
+static void waiting_for_squirrel_isr();
+static void detected_squirrel_isr();
+static void dispensing_isr();
+static void cooldown_isr();
+static void out_of_food_isr();
+
 // main program logic interrupt routine
 void main_isr() {
-	switch (FeederState) {
+
+	// send the feeder state to the lcd and update it
+	switch (feeder.state) {
 	case WAITING_FOR_SQUIRREL:
 		waiting_for_squirrel_isr();
 		break;
@@ -68,7 +77,7 @@ void main_isr() {
 		dispensing_isr();
 		break;
 	case COOLDOWN:
-		cooldown();
+		cooldown_isr();
 		break;
 	case OUT_OF_FOOD:
 		out_of_food_isr();
@@ -76,103 +85,79 @@ void main_isr() {
 	}
 }
 
-waiting_for_squirrel_isr() {
+static void waiting_for_squirrel_isr() {
 	if(get_cur_distance_average() > IR_DISTANCE_THRESHOLD) {
-		FeederState = DETECTED_SQUIRREL;
+		feeder.state = DETECTED_SQUIRREL;
 	}
 }
 
-detected_squirrel_isr() {
+static void detected_squirrel_isr() {
+	feeder.squirrel_count++;
+
 	error_state = camera_take_photo();
+	motor_start();
+
 	if(!error_state) {
 		while(1){} // Should probably remove error-handling for demo
 	}
-	FeederState = DISPENSING;
+
+	feeder.state = DISPENSING;
 }
 
-dispensing_isr() {
-	int dispense_count = 0;
-	while(ps_get_reading() < PS_FOOD_THRESHOLD) {
-		stepper_rotate_clockwise_steps(1); // Could adjust function to use steps/partial rotations
-		if(dispense_count > 5) {
-			FeederState = OUT_OF_FOOD;
-		}
-	}
-	FeederState = COOLDOWN;
-}
+static uint32_t times_dispensed = 0;
+static void dispensing_isr() {
+	if (ps_get_reading() >= PS_FOOD_THRESHOLD) {
+		// Must have dispensed enough food
+		motor_stop();
 
-cooldown() {
-	HAL_DELAY(cool_down_time);
-	FeederState = WAITING_FOR_SQUIRREL;
-}
+		feeder.state = COOLDOWN;
+		times_dispensed = 0;
 
-out_of_food() {	// We don't have a great way to determine when food is added back
-	out_of_food = true;
-	while(out_of_food) {
-		stepper_rotate_clockwise_steps(5);
-		HAL_DELAY(30000);
-		if(ps_get_reading() > PS_FOOD_THRESHOLD){
-			FeederState = WAITING_FOR_SQUIRREL;
-		}
-	}
-}
-
-
-
-//FeederStateType cooldown_isr(){}
-void perform_startup_routine() {
-	/*
-	 * Spin motor a lil bit
-	 */
-	stepper_rotate_clockwise_steps(200);
-
-	/*
-	 * Test force sensor
-	 */
-	uint32_t ttl_weight = 0;
-	for (uint8_t i = 0; i < 1; i++) {
-		ttl_weight += weigh();
+		return;
 	}
 
-	float avg_weight = ttl_weight / 4.0;
+	if (times_dispensed >= MAX_DISPENSE_ITERATIONS) {
+		// has dispensed 5 times on this iteration already -- out of food
+		motor_stop();
 
-	/*
-	 * Test the IR sensor
-	 */
-//	float ttl_distance = 0;
-//	for (uint8_t i = 0; i < 15; i++) {
-//		float dist = read_distance();
-//		ttl_distance += read_distance();
-//	}
+		feeder.state = OUT_OF_FOOD;
+		times_dispensed = 0;
 
-//	float avg_distance = ttl_distance / 4.0;
+		return;
+	}
+
+	// Down here is "average" use case -- needs to continue dispensing
+	++times_dispensed;
+
+	// Stay in the same state
+	feeder.state = DISPENSING;
 }
 
+/*
+ * Prevents the system from dispensing food over and over again
+ */
+static uint32_t cooldown_cur_iteration = 0;
+static void cooldown_isr(void) {
+	cooldown_cur_iteration += 1;
 
-void simple_IR_trigger() {
-	while(1) {
-		float ttl_distance = 0;
-		for (uint8_t i = 0; i < 8; i++) {
-			ttl_distance += read_distance();
-		}
-		float avg_distance = ttl_distance / 8.0;
-
-		if (avg_distance < 3) {
-			stepper_rotate_clockwise_steps(200);
-			break;
-		}
+	if (cooldown_cur_iteration == COOLDOWN_ISR_ITERATIONS) {
+		cooldown_cur_iteration = 0;
+		feeder.state = WAITING_FOR_SQUIRREL;
 	}
 }
 
-void camera_test() {
+// In order to reset the feeder, just put your hand on the pressure sensor
+static void out_of_food_isr() {	// We don't have a great way to determine when food is added back
+	feeder.out_of_food = true;
 
-
-	camera_take_photo();
-
-//	while (camera_process() != 1);
+	if (ps_get_reading() > PS_RESET_THRESHOLD) {
+		feeder.out_of_food = false;
+		feeder.state = WAITING_FOR_SQUIRREL;
+	}
 }
 
-// Should update variables to display right stuff
+
+
 
 
 

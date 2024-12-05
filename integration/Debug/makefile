@@ -39,34 +39,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := camera
+BUILD_ARTIFACT_NAME := integration
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-camera.elf \
+integration.elf \
 
 MAP_FILES += \
-camera.map \
+integration.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-camera.list \
+integration.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: camera.elf secondary-outputs
+main-build: integration.elf secondary-outputs
 
 # Tool invocations
-camera.elf camera.map: $(OBJS) $(USER_OBJS) N:\373\eecs373_squirrel_feeder-started_integration_fr_ok\eecs373_squirrel_feeder-started_integration_fr_ok\camera\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "camera.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"N:\373\eecs373_squirrel_feeder-started_integration_fr_ok\eecs373_squirrel_feeder-started_integration_fr_ok\camera\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="camera.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+integration.elf integration.map: $(OBJS) $(USER_OBJS) C:\Users\mvielmet\Documents\eecs373_squirrel_feeder\integration\STM32L4R5ZITXP_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "integration.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\mvielmet\Documents\eecs373_squirrel_feeder\integration\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="integration.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -75,14 +75,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-camera.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "camera.list"
+integration.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "integration.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) camera.elf camera.list camera.map default.size.stdout
+	-$(RM) default.size.stdout integration.elf integration.list integration.map
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

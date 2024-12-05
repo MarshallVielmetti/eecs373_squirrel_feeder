@@ -1,4 +1,4 @@
-../Core/Src/ir_sensor.c:30:6:ir_sensor_init	2
-../Core/Src/ir_sensor.c:37:14:read_distance	1
-../Core/Src/ir_sensor.c:52:6:ir_sensor_interrupt_routine	1
-../Core/Src/ir_sensor.c:59:7:get_cur_distance_average	2
+../Core/Src/ir_sensor.c:31:6:ir_sensor_init	2
+../Core/Src/ir_sensor.c:38:14:read_distance	1
+../Core/Src/ir_sensor.c:53:6:ir_sensor_interrupt_routine	1
+../Core/Src/ir_sensor.c:60:7:get_cur_distance_average	2

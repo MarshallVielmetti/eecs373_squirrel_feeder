@@ -1,0 +1,29 @@
+
+
+#ifndef INC_LCD_H_
+#define INC_LCD_H_
+
+
+#include "integration.h"
+
+void lcd_isr(const Feeder& feeder );
+
+/*
+ * Tells the LCD to display a picture of a squirrel
+ */
+void squirrel_clip();
+
+/*
+ * Tells the LCD to display a different squirrel res image
+ */
+void squirrel_res();
+
+/*
+ * Changes the LCd to display a Michigan logo
+ */
+void m_logo();
+
+void display_stats(int weight, int squirrel_count);
+void lcd_between();
+
+#endif INC_LCD_H_

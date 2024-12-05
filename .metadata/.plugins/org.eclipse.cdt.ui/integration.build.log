@@ -1,0 +1,17 @@
+11:12:58 **** Incremental Build of configuration Debug for project integration ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/integration.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L4R5xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -I"C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc" -I../Drivers/LCD/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/integration.d" -MT"Core/Src/integration.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/integration.o"
+arm-none-eabi-gcc -o "integration.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mvielmet\Documents\eecs373_squirrel_feeder\integration\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="integration.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: integration.elf
+ 
+arm-none-eabi-size  integration.elf 
+arm-none-eabi-objdump -h -S integration.elf  > "integration.list"
+   text	   data	    bss	    dec	    hex	filename
+ 350656	    280	   3584	 354520	  568d8	integration.elf
+Finished building: default.size.stdout
+ 
+Finished building: integration.list
+ 
+
+11:13:00 Build Finished. 0 errors, 0 warnings. (took 2s.127ms)
+
