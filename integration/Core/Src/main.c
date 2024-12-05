@@ -161,7 +161,14 @@ int main(void)
   fres = f_mount(&FatFs, "", 1); //1=mount now
   while (fres != FR_OK);
 
+  HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(TIM4_IRQn, 3, 0);
+  HAL_NVIC_SetPriority(TIM5_IRQn, 3, 0);
+
   init_peripherals();
+
+//  get_feeder()->needs_to_take_picture = true;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -176,6 +183,10 @@ int main(void)
 			get_feeder()->needs_to_take_picture = false;
 		}
 	}
+
+//	if (!camera_get_ready() && camera_is_ready_to_request()) {
+//		camera_request_chunk();
+//	}
 
 	if (!camera_get_ready()) {
 		camera_process();

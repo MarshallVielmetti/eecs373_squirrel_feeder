@@ -150,9 +150,13 @@ uint8_t VC0706_ReadImageBlock(uint8_t *image_buffer, uint32_t start_address) {
     readCommand[11] = 0x00;
     readCommand[12] = 0xFF;
 
+    __disable_irq();
+
     VC0706_SendCommand(VC0706_CMD_READ_DATA, readCommand, sizeof(readCommand));
 
     HAL_StatusTypeDef status = HAL_UART_Receive(&CAM_UART_HANDLE, image_buffer, VC0706_IMAGE_BLOCK_SIZE + 10, VC0706_RESPONSE_TIMEOUT);
+
+    __enable_irq();
 
     return status == HAL_OK;
 }

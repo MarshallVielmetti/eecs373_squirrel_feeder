@@ -1,8 +1,8 @@
-../Core/Src/load_cell.c:32:13:microDelay	16	static
-../Core/Src/load_cell.c:42:16:getHX711	24	static
-../Core/Src/load_cell.c:77:12:weigh	32	static
-../Core/Src/load_cell.c:95:6:ps_init	4	static
-../Core/Src/load_cell.c:99:6:ps_take_reading	8	static
-../Core/Src/load_cell.c:104:5:ps_get_reading	4	static
-../Core/Src/load_cell.c:110:6:ps_set_needs_reading	16	static
-../Core/Src/load_cell.c:115:6:ps_needs_reading	4	static
+../Core/Src/load_cell.c:34:13:microDelay	16	static
+../Core/Src/load_cell.c:44:16:getHX711	24	static
+../Core/Src/load_cell.c:79:12:weigh	32	static
+../Core/Src/load_cell.c:96:6:ps_init	4	static
+../Core/Src/load_cell.c:100:6:ps_take_reading	8	static
+../Core/Src/load_cell.c:105:5:ps_get_reading	4	static
+../Core/Src/load_cell.c:111:6:ps_set_needs_reading	16	static
+../Core/Src/load_cell.c:116:6:ps_needs_reading	4	static

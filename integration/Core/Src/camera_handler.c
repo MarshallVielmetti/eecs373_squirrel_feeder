@@ -21,6 +21,7 @@
 #define CAMERA_READ_ACK_SIZE 10
 
 extern TIM_HandleTypeDef CAM_TIMER_HANDLE;
+extern UART_HandleTypeDef CAM_UART_HANDLE;
 
 
 static bool camera_ready;
@@ -33,6 +34,9 @@ static uint16_t rand_seed;
 static uint8_t img_read_buf[CAMERA_READ_IMG_SIZE + CAMERA_READ_ACK_SIZE];
 
 static FIL file_writer;
+
+
+static bool READY_TO_REQUEST = false;
 
 
 /*
@@ -99,12 +103,13 @@ uint8_t camera_take_photo(void) {
 	cur_image_idx = 0;
 	camera_ready = 0; // no longer ready to take a new photo
 
+	READY_TO_REQUEST = true;
+//	__HAL_UART_ENABLE_IT(&CAM_UART_HANDLE, UART_IT_RXNE);
+
 	return 1;
 }
 
 static void finish_image(void) {
-	VC0706_ReadImageBlock(img_read_buf, cur_image_idx);
-
 	UINT bytes_wrote;
 
 	for (uint32_t i = 1; i < 32; i++) {
@@ -118,6 +123,9 @@ static void finish_image(void) {
 	f_close(&file_writer);
 
 	camera_ready = true; // ready to take a new image
+
+//	__HAL_UART_DISABLE_IT(&CAM_UART_HANDLE, UART_IT_RXNE);
+
 	printf("Camera Processing Completed!\n\r");
 }
 
@@ -162,3 +170,34 @@ uint8_t camera_process(void) {
 uint8_t camera_get_ready() {
 	return camera_ready;
 }
+
+bool camera_is_ready_to_request() {
+	return READY_TO_REQUEST;
+}
+
+// called by main
+void camera_request_chunk() {
+	printf("Camera Requesting\n\r");
+	READY_TO_REQUEST = false;
+
+	VC0706_ReadImageBlock(img_read_buf, cur_image_idx);
+}
+
+#define VC0706_RESPONSE_TIMEOUT 1000
+#define VC0706_IMAGE_BLOCK_SIZE 32
+void camera_receive_chunk() {
+	printf("Camera Processing Image - %d%% Completed\n\r", camera_get_percent_done());
+
+    HAL_StatusTypeDef status = HAL_UART_Receive(&CAM_UART_HANDLE, img_read_buf, VC0706_IMAGE_BLOCK_SIZE + 10, VC0706_RESPONSE_TIMEOUT);
+
+	if (cur_image_idx >= image_size - CAMERA_READ_IMG_SIZE) {
+		finish_image(); // needs to perform the final processing in this->finish_image
+	} else {
+		process_chunk();
+	}
+
+	READY_TO_REQUEST = true;
+}
+
+
+

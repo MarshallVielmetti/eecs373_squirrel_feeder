@@ -21,6 +21,8 @@
 static float knownOriginal = 1;  // in milli gram
 static float knownHX711 = 1;
 
+#define NUM_PS_SAMPLES 5
+
 extern TIM_HandleTypeDef PS_TIMER_HANDLE;
 
 static int CURRENT_READING = 0;
@@ -77,15 +79,14 @@ static int32_t getHX711(void)
 static int weigh()
 {
   int32_t  total = 0;
-  int32_t  samples = 50;
   int milligram;
   float coefficient;
 
-  for(uint16_t i=0 ; i<samples ; i++)
+  for(uint16_t i=0 ; i<NUM_PS_SAMPLES ; i++)
   {
       total += getHX711();
   }
-  int32_t average = (int32_t)(total / samples);
+  int32_t average = (int32_t)(total / NUM_PS_SAMPLES);
   coefficient = knownOriginal / knownHX711;
   milligram = (int)(average-PS0_TARE)*coefficient;
   return milligram;
