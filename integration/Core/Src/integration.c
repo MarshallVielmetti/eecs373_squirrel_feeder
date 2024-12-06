@@ -29,7 +29,9 @@ static Feeder feeder;
 #define PS_FOOD_THRESHOLD 5000		// Max weight (mg) of food on tray
 #define PS_RESET_THRESHOLD 10000	// Put your hand on the feeder to reset it from the out_of_food state after refill
 #define COOLDOWN_ISR_ITERATIONS 20
-#define MAX_DISPENSE_ITERATIONS 5
+
+#define MIN_DISPENSE_ITERATIONS 5
+#define MAX_DISPENSE_ITERATIONS 10
 
 
 void init_peripherals() {
@@ -43,7 +45,7 @@ void init_peripherals() {
 	// shared between the IR sensor and pressure sensor
 	HAL_TIM_Base_Start_IT(&IR_SENSOR_TIMER_HANDLE);
 
-//	lcd_init(&feeder);
+	lcd_init(&feeder);
 
 	feeder.state = WAITING_FOR_SQUIRREL;
 	feeder.squirrel_count = 0;
@@ -53,7 +55,7 @@ void init_peripherals() {
 	HAL_TIM_Base_Start_IT(&MAIN_TIMER_HANDLE);
 
 	// start LCD timer
-//	HAL_TIM_Base_Start_IT(&LCD_TIMER_HANDLE);
+	HAL_TIM_Base_Start_IT(&LCD_TIMER_HANDLE);
 
 }
 
@@ -116,10 +118,11 @@ static void dispensing_isr() {
 	printf("Times Dispensed: %d\n\r", times_dispensed);
 	printf("PS reading: %d,  Threshold: %d\n\r", ps_get_reading(), PS_FOOD_THRESHOLD);
 
-	if (ps_get_reading() >= PS_FOOD_THRESHOLD) {
+	if (ps_get_reading() >= PS_FOOD_THRESHOLD && times_dispensed >= MIN_DISPENSE_ITERATIONS) {
 		printf("Transitioning to COOLDOWN\n\r");
 		// Must have dispensed enough food
 		motor_stop();
+		feeder.needs_to_process_picture = true;
 
 		feeder.state = COOLDOWN;
 		times_dispensed = 0;
@@ -131,6 +134,7 @@ static void dispensing_isr() {
 		printf("Transitioning to out_of_food state\n\r");
 		// has dispensed 5 times on this iteration already -- out of food
 		motor_stop();
+		feeder.needs_to_process_picture = true;
 
 		feeder.state = OUT_OF_FOOD;
 		times_dispensed = 0;

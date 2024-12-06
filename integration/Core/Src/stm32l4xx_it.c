@@ -63,7 +63,6 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim4;
 extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim15;
@@ -220,7 +219,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)
   /* USER CODE END TIM1_BRK_TIM15_IRQn 0 */
   HAL_TIM_IRQHandler(&htim15);
   /* USER CODE BEGIN TIM1_BRK_TIM15_IRQn 1 */
-  lcd_isr();
+  lcd_trigger_update();
   /* USER CODE END TIM1_BRK_TIM15_IRQn 1 */
 }
 
@@ -254,21 +253,6 @@ void TIM4_IRQHandler(void)
   stepper_rotate_clockwise_ir();
 
   /* USER CODE END TIM4_IRQn 1 */
-}
-
-/**
-  * @brief This function handles USART3 global interrupt.
-  */
-void USART3_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART3_IRQn 0 */
-
-  /* USER CODE END USART3_IRQn 0 */
-  HAL_UART_IRQHandler(&huart3);
-  /* USER CODE BEGIN USART3_IRQn 1 */
-
-  camera_receive_chunk();
-  /* USER CODE END USART3_IRQn 1 */
 }
 
 /**

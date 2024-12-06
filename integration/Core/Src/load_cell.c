@@ -43,12 +43,16 @@ static void microDelay(uint16_t delay)
  */
 static int32_t getHX711(void)
 {
+	__disable_irq(); // ENTER CRITICAL SECTION
   uint32_t data = 0;
   uint32_t startTime = HAL_GetTick();
   while(HAL_GPIO_ReadPin(PS0_DATA_GPIO_Port, PS0_DATA_Pin) == GPIO_PIN_SET)
   {
-    if(HAL_GetTick() - startTime > 200)
+	// weird
+    if(HAL_GetTick() - startTime > 200) {
+      __enable_irq();
       return 0;
+    }
   }
 
   for(int8_t len=0; len<24 ; len++)
@@ -72,6 +76,8 @@ static int32_t getHX711(void)
   HAL_GPIO_WritePin(PS0_CLK_GPIO_Port, PS0_CLK_Pin, GPIO_PIN_RESET);
   microDelay(1);
 
+  __enable_irq();
+
   return data;
 }
 
@@ -82,10 +88,12 @@ static int weigh()
   int milligram;
   float coefficient;
 
+  // average out NUM_PS_SAMPLES
   for(uint16_t i=0 ; i<NUM_PS_SAMPLES ; i++)
   {
       total += getHX711();
   }
+
   int32_t average = (int32_t)(total / NUM_PS_SAMPLES);
   coefficient = knownOriginal / knownHX711;
   milligram = (int)(average-PS0_TARE)*coefficient;

@@ -9,6 +9,7 @@
 #define ILI9341_H_
 
 #include "fonts.h"
+#include "main.h"
 #include <stdbool.h>
 
 #define ILI9341_MADCTL_MY  0x80
@@ -20,15 +21,15 @@
 #define ILI9341_MADCTL_MH  0x04
 
 /*** Redefine if necessary ***/
-#define ILI9341_SPI_PORT hspi1
 extern SPI_HandleTypeDef ILI9341_SPI_PORT;
 
-#define ILI9341_RES_Pin       GPIO_PIN_0
-#define ILI9341_RES_GPIO_Port GPIOB
-#define ILI9341_CS_Pin        GPIO_PIN_4
-#define ILI9341_CS_GPIO_Port  GPIOA
-#define ILI9341_DC_Pin        GPIO_PIN_1
-#define ILI9341_DC_GPIO_Port  GPIOB
+// DEFINED IN MAIN.h
+//#define ILI9341_RES_Pin       GPIO_PIN_0
+//#define ILI9341_RES_GPIO_Port GPIOB
+//#define ILI9341_CS_Pin        GPIO_PIN_4
+//#define ILI9341_CS_GPIO_Port  GPIOA
+//#define ILI9341_DC_Pin        GPIO_PIN_1
+//#define ILI9341_DC_GPIO_Port  GPIOB
 
 // default orientation
 /*

@@ -1,8 +1,8 @@
 ../Core/Src/load_cell.c:34:13:microDelay	16	static
-../Core/Src/load_cell.c:44:16:getHX711	24	static
-../Core/Src/load_cell.c:79:12:weigh	32	static
-../Core/Src/load_cell.c:96:6:ps_init	4	static
-../Core/Src/load_cell.c:100:6:ps_take_reading	8	static
-../Core/Src/load_cell.c:105:5:ps_get_reading	4	static
-../Core/Src/load_cell.c:111:6:ps_set_needs_reading	16	static
-../Core/Src/load_cell.c:116:6:ps_needs_reading	4	static
+../Core/Src/load_cell.c:44:16:getHX711	24	static,ignoring_inline_asm
+../Core/Src/load_cell.c:85:12:weigh	32	static
+../Core/Src/load_cell.c:104:6:ps_init	4	static
+../Core/Src/load_cell.c:108:6:ps_take_reading	8	static
+../Core/Src/load_cell.c:113:5:ps_get_reading	4	static
+../Core/Src/load_cell.c:119:6:ps_set_needs_reading	16	static
+../Core/Src/load_cell.c:124:6:ps_needs_reading	4	static

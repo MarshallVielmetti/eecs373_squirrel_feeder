@@ -8,6 +8,7 @@
 #include "test_squirrel_1.h"
 #include "test_squirrel_2.h"
 #include "test_umich_1.h"
+#include "white_screen.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -18,12 +19,12 @@ extern TIM_HandleTypeDef LCD_TIMER_HANDLE;
 
 static const Feeder* lcd_feeder_ref;
 
+static bool IS_STATS = false;
+
 enum LcdStateType {
 	SQUIRREL_CLIP,
-	SQUIRREL_RES,
+	SQUIRREL_HD,
 	M_LOGO,
-	STATISTICS,
-	OUT_OF_FOOD_WARNING
 } LcdState;
 
 void lcd_init(const Feeder* feeder) {
@@ -31,11 +32,13 @@ void lcd_init(const Feeder* feeder) {
 	ILI9341_Init();
 
 	lcd_feeder_ref = feeder;
+	LcdState = SQUIRREL_CLIP;
 }
 
 static void lcd_between(){
 //	HAL_Delay(1000);
-	ILI9341_FillScreen(ILI9341_WHITE);
+//	ILI9341_FillScreen(ILI9341_WHITE);
+	ILI9341_DrawImage(0,0,320,240,(const uint16_t*)white_screen_map);
 }
 
 
@@ -43,7 +46,7 @@ static void lcd_between(){
 
 void squirrel_clip() {
 	ILI9341_DrawImage((ILI9341_WIDTH - 320)/2,(ILI9341_HEIGHT-240)/2,320,240,(const uint16_t*)squirrelclip);
-	LcdState = SQUIRREL_RES;
+	LcdState = SQUIRREL_HD;
 }
 
 void squirrel_res() {
@@ -53,7 +56,7 @@ void squirrel_res() {
 
 void m_logo() {
 	ILI9341_DrawImage((ILI9341_WIDTH - 320)/2,(ILI9341_HEIGHT-203)/2,320,203,(const uint16_t*)MLogo);
-	LcdState = STATISTICS;
+	LcdState = SQUIRREL_CLIP;
 }
 
 void display_stats() {
@@ -93,45 +96,54 @@ void display_stats() {
 	}
 
 	ILI9341_WriteString(10, 190, camera_ready, Font_11x18, ILI9341_YELLOW, ILI9341_BLUE);
-
-	LcdState = SQUIRREL_CLIP;
 }
 
 // DISPLAY OUT OF FOOD WARNING
 void display_out_of_food() {
 	const char* out_of_food_str = "!! OUT OF FOOD !!";
 	ILI9341_WriteString(10, 70, out_of_food_str, Font_16x26, ILI9341_YELLOW, ILI9341_BLUE);
-
-	if (lcd_feeder_ref->state != OUT_OF_FOOD) {
-		LcdState = STATISTICS;
-	}
 }
 
-// MAIN LCD INTERRUPT SERVICE ROUTINE
-void lcd_isr() {
+static bool LCD_UPDATE = false;
+
+// MAIN LCD SERVICE ROUTINE
+void lcd_update() {
+	IS_STATS = !IS_STATS;
+
 	lcd_between();
 
-	if (lcd_feeder_ref->state == OUT_OF_FOOD) {
-		LcdState = OUT_OF_FOOD_WARNING;
+	if (IS_STATS) {
+		printf("lcd - transition to statistics\n\r");
+		display_stats();
+	} else if (lcd_feeder_ref->state == OUT_OF_FOOD) {
+		printf("lcd - transition to no food warning\n\r");
+		display_out_of_food();
+	} else {
+		switch(LcdState) {
+		case SQUIRREL_CLIP:
+			printf("lcd - transition to squirrel clip\n\r");
+			squirrel_clip();
+			break;
+		case SQUIRREL_HD:
+			printf("lcd - transition to squirrel res\n\r");
+			squirrel_res();
+			break;
+		case M_LOGO:
+			printf("lcd - transition to M logo\n\r");
+			m_logo();
+			break;
+		}
 	}
 
-	switch(LcdState) {
-	case SQUIRREL_CLIP:
-		squirrel_clip();
-		break;
-	case SQUIRREL_RES:
-		squirrel_res();
-		break;
-	case M_LOGO:
-		m_logo();
-		break;
-	case STATISTICS:
-		display_stats();
-		break;
-	case OUT_OF_FOOD_WARNING:
-		display_out_of_food();
-		break;
-	}
+	LCD_UPDATE = false;
+}
+
+void lcd_trigger_update() {
+	LCD_UPDATE = true;
+}
+
+bool lcd_needs_update() {
+	return LCD_UPDATE;
 }
 
 

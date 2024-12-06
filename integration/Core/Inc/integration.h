@@ -30,6 +30,7 @@ typedef struct FeederType {
 
 	// whether or not the camera needs to take a picture
 	bool needs_to_take_picture;
+	bool needs_to_process_picture;
 } Feeder;
 
 // This must be called first -- initializes main system objects

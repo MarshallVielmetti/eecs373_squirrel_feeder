@@ -1,12 +1,14 @@
 #include "integration.h"
 
+#include <stdbool.h>
+
 #ifndef INC_LCD_H_
 #define INC_LCD_H_
 
 // give sthe LCD a const pointer to the feeder object
 void lcd_init(const Feeder* feeder);
 
-void lcd_isr();
+void lcd_update();
 
 
 /*
@@ -26,5 +28,9 @@ void m_logo();
 
 void display_stats(int weight, int squirrel_count);
 void lcd_between();
+
+void lcd_trigger_update();
+
+bool lcd_needs_update();
 
 #endif

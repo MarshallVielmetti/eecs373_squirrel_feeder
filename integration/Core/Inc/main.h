@@ -79,12 +79,12 @@ void Error_Handler(void);
 #define IR0_ADC_GPIO_Port GPIOC
 #define IR1_ADC_Pin GPIO_PIN_5
 #define IR1_ADC_GPIO_Port GPIOC
-#define LCD_CS_Pin GPIO_PIN_14
-#define LCD_CS_GPIO_Port GPIOF
-#define LCD_DC_Pin GPIO_PIN_15
-#define LCD_DC_GPIO_Port GPIOF
-#define LCD_RESET_Pin GPIO_PIN_13
-#define LCD_RESET_GPIO_Port GPIOE
+#define ILI9341_CS_Pin GPIO_PIN_14
+#define ILI9341_CS_GPIO_Port GPIOF
+#define ILI9341_DC_Pin GPIO_PIN_15
+#define ILI9341_DC_GPIO_Port GPIOF
+#define ILI9341_RES_Pin GPIO_PIN_13
+#define ILI9341_RES_GPIO_Port GPIOE
 #define CAM_TX_Pin GPIO_PIN_8
 #define CAM_TX_GPIO_Port GPIOD
 #define CAM_RX_Pin GPIO_PIN_9
@@ -121,6 +121,8 @@ void Error_Handler(void);
 #define IR_SENSOR_TIMER_HANDLE htim5
 #define LCD_TIMER_HANDLE htim15
 #define MAIN_TIMER_HANDLE htim16
+
+#define ILI9341_SPI_PORT hspi3
 
 /* USER CODE END Private defines */
 

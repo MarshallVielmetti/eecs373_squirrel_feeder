@@ -1,10 +1,27 @@
-13:29:40 **** Incremental Build of configuration Debug for project integration ****
+14:47:18 **** Incremental Build of configuration Debug for project integration ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/load_cell.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L4R5xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -I"C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc" -I../Drivers/LCD/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/load_cell.d" -MT"Core/Src/load_cell.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/load_cell.o"
+arm-none-eabi-gcc "../Core/Src/integration.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L4R5xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -I"C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc" -I../Drivers/LCD/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/integration.d" -MT"Core/Src/integration.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/integration.o"
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32L4R5xx -c -I../Core/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -I"C:/Users/mvielmet/Documents/eecs373_squirrel_feeder/integration/Drivers/LCD/Inc" -I../Drivers/LCD/Inc -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/integration.c: In function 'dispensing_isr':
+../Core/Src/integration.c:118:35: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  118 |         printf("Times Dispensed: %d\n\r", times_dispensed);
+      |                                  ~^       ~~~~~~~~~~~~~~~
+      |                                   |       |
+      |                                   int     uint32_t {aka long unsigned int}
+      |                                  %ld
+../Core/Src/integration.c: In function 'cooldown_isr':
+../Core/Src/integration.c:159:46: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  159 |         printf("Current cooldown iteration: %d\n\r", cooldown_cur_iteration);
+      |                                             ~^       ~~~~~~~~~~~~~~~~~~~~~~
+      |                                              |       |
+      |                                              int     uint32_t {aka long unsigned int}
+      |                                             %ld
 ../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:153:7: warning: unused variable 'fil' [-Wunused-variable]
-  153 |   FIL fil;              //File handle
+../Core/Src/main.c:194:17: warning: implicit declaration of function 'camera_process' [-Wimplicit-function-declaration]
+  194 |                 camera_process();
+      |                 ^~~~~~~~~~~~~~
+../Core/Src/main.c:155:7: warning: unused variable 'fil' [-Wunused-variable]
+  155 |   FIL fil;              //File handle
       |       ^~~
 arm-none-eabi-gcc -o "integration.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\mvielmet\Documents\eecs373_squirrel_feeder\integration\STM32L4R5ZITXP_FLASH.ld" --specs=nosys.specs -Wl,-Map="integration.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: integration.elf
@@ -12,11 +29,11 @@ Finished building target: integration.elf
 arm-none-eabi-size  integration.elf 
 arm-none-eabi-objdump -h -S integration.elf  > "integration.list"
    text	   data	    bss	    dec	    hex	filename
- 488980	    644	   3660	 493284	  786e4	integration.elf
+ 643588	    644	   3660	 647892	  9e2d4	integration.elf
 Finished building: default.size.stdout
  
 Finished building: integration.list
  
 
-13:29:42 Build Finished. 0 errors, 1 warnings. (took 1s.794ms)
+14:47:21 Build Finished. 0 errors, 4 warnings. (took 2s.525ms)
 

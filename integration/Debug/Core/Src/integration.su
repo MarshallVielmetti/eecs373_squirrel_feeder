@@ -1,8 +1,8 @@
-../Core/Src/integration.c:35:6:init_peripherals	8	static
-../Core/Src/integration.c:67:6:main_isr	8	static
-../Core/Src/integration.c:95:13:waiting_for_squirrel_isr	8	static
-../Core/Src/integration.c:104:13:detected_squirrel_isr	8	static
-../Core/Src/integration.c:115:13:dispensing_isr	8	static
-../Core/Src/integration.c:152:13:cooldown_isr	8	static
-../Core/Src/integration.c:164:13:out_of_food_isr	8	static
-../Core/Src/integration.c:175:9:get_feeder	4	static
+../Core/Src/integration.c:37:6:init_peripherals	8	static
+../Core/Src/integration.c:69:6:main_isr	8	static
+../Core/Src/integration.c:97:13:waiting_for_squirrel_isr	8	static
+../Core/Src/integration.c:106:13:detected_squirrel_isr	8	static
+../Core/Src/integration.c:117:13:dispensing_isr	8	static
+../Core/Src/integration.c:156:13:cooldown_isr	8	static
+../Core/Src/integration.c:168:13:out_of_food_isr	8	static
+../Core/Src/integration.c:179:9:get_feeder	4	static

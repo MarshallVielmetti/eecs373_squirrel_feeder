@@ -39,7 +39,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FatFs/src/diskio.h \
  ../Middlewares/Third_Party/FatFs/src/ff.h ../FATFS/Target/user_diskio.h \
  ../Core/Inc/integration.h ../Core/Inc/camera_handler.h \
- ../Core/Inc/load_cell.h
+ ../Core/Inc/motor.h ../Core/Inc/load_cell.h ../Core/Inc/lcd.h \
+ ../Core/Inc/integration.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -85,4 +86,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../FATFS/Target/user_diskio.h:
 ../Core/Inc/integration.h:
 ../Core/Inc/camera_handler.h:
+../Core/Inc/motor.h:
 ../Core/Inc/load_cell.h:
+../Core/Inc/lcd.h:
+../Core/Inc/integration.h:

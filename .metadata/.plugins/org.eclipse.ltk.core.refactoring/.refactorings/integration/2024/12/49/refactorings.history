@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;integration/camera.ioc&apos; to &apos;integration.ioc&apos;" description="Rename resource &apos;camera.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="camera.ioc" name="integration.ioc" stamp="1733410728503" updateReferences="true"/>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;integration/camera.ioc&apos; to &apos;integration.ioc&apos;" description="Rename resource &apos;camera.ioc&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="camera.ioc" name="integration.ioc" stamp="1733410728503" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;integration/Drivers/LCD/Inc/white_screen.c&apos; to &apos;white_screen.h&apos;" description="Rename resource &apos;white_screen.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Drivers/LCD/Inc/white_screen.c" name="white_screen.h" stamp="1733502411977" updateReferences="true"/>
 </session>

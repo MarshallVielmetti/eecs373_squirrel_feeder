@@ -24,8 +24,9 @@
 /* USER CODE BEGIN Includes */
 #include "integration.h"
 #include "camera_handler.h"
+#include "motor.h"
 #include "load_cell.h"
-
+#include "lcd.h"
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -125,6 +126,7 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -153,7 +155,7 @@ int main(void)
   FIL fil; 		//File handle
   FRESULT fres; //Result after operations
 
-  printf("#########################################################\n\r");
+  printf("\n\r#########################################################\n\r");
   printf("                INITIALIZING SQURREL FEEDER . . .        \n\r");
   printf("#########################################################\n\r");
   printf("\n\r\n\r");
@@ -188,12 +190,16 @@ int main(void)
 //		camera_request_chunk();
 //	}
 
-	if (!camera_get_ready()) {
+	if (!camera_get_ready() && get_feeder()->needs_to_process_picture) {
 		camera_process();
 	}
 
 	if (ps_needs_reading()) {
 		ps_take_reading();
+	}
+
+	if (lcd_needs_update()) {
+		lcd_update();
 	}
   }
 
@@ -463,7 +469,7 @@ static void MX_SPI3_Init(void)
   hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi3.Init.NSS = SPI_NSS_SOFT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
   hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -715,23 +721,23 @@ static void MX_GPIO_Init(void)
   HAL_PWREx_EnableVddIO2();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, PS1_CLK_Pin|M1_2_Pin|M1_3_Pin|LCD_CS_Pin
-                          |LCD_DC_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOF, PS1_CLK_Pin|M1_2_Pin|M1_3_Pin|ILI9341_CS_Pin
+                          |ILI9341_DC_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, PS0_CLK_Pin|M0_0_Pin|M0_1_Pin|M0_2_Pin
                           |M0_3_Pin|M1_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LCD_RESET_GPIO_Port, LCD_RESET_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(ILI9341_RES_GPIO_Port, ILI9341_RES_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, SD_CS_Pin|M1_1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PS1_CLK_Pin M1_2_Pin M1_3_Pin LCD_CS_Pin
-                           LCD_DC_Pin */
-  GPIO_InitStruct.Pin = PS1_CLK_Pin|M1_2_Pin|M1_3_Pin|LCD_CS_Pin
-                          |LCD_DC_Pin;
+  /*Configure GPIO pins : PS1_CLK_Pin M1_2_Pin M1_3_Pin ILI9341_CS_Pin
+                           ILI9341_DC_Pin */
+  GPIO_InitStruct.Pin = PS1_CLK_Pin|M1_2_Pin|M1_3_Pin|ILI9341_CS_Pin
+                          |ILI9341_DC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -768,12 +774,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF1_TIM1;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LCD_RESET_Pin */
-  GPIO_InitStruct.Pin = LCD_RESET_Pin;
+  /*Configure GPIO pin : ILI9341_RES_Pin */
+  GPIO_InitStruct.Pin = ILI9341_RES_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LCD_RESET_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(ILI9341_RES_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PE14 PE15 */
   GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_15;

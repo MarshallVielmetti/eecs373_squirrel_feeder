@@ -6,6 +6,7 @@
  */
 
 #include "camera_handler.h"
+#include "integration.h"
 #include "vc0706_driver.h"
 #include "FatFs.h"
 
@@ -123,6 +124,7 @@ static void finish_image(void) {
 	f_close(&file_writer);
 
 	camera_ready = true; // ready to take a new image
+	get_feeder()->needs_to_process_picture = false;
 
 //	__HAL_UART_DISABLE_IT(&CAM_UART_HANDLE, UART_IT_RXNE);
 
