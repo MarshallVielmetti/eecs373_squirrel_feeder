@@ -19,5 +19,9 @@ uint8_t VC0706_StopCapture(void);
 uint16_t VC0706_ReadImageDataLength(void);
 uint8_t VC0706_ReadImageBlock(uint8_t *image_buffer, uint32_t start_address);
 
+uint8_t VC0706_SetResolution(uint8_t resolution);
+
+uint8_t VC0706_Reset(void);
+
 
 #endif /* INC_VC0706_DRIVER_H_ */

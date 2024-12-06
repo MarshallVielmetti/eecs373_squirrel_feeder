@@ -3,3 +3,5 @@
 ../Core/Src/vc0706_driver.c:90:9:VC0706_StopCapture	24	static
 ../Core/Src/vc0706_driver.c:110:10:VC0706_ReadImageDataLength	32	static
 ../Core/Src/vc0706_driver.c:132:9:VC0706_ReadImageBlock	32	static,ignoring_inline_asm
+../Core/Src/vc0706_driver.c:164:9:VC0706_SetResolution	32	static
+../Core/Src/vc0706_driver.c:179:9:VC0706_Reset	24	static

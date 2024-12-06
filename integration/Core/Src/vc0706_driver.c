@@ -15,7 +15,7 @@
 #define VC0706_CMD_PREFIX 		0x56 /*(Command Prefix)*/
 
 #define VC0706_CMD_RESET 		0x26 /*(Reset)*/
-#define VC0706_CMD_SET_BAUD		0x31 /*(Baudrate)*/
+#define VC0706_CMD_SET_IMAGE_RES	0x31 /*(Resolution)*/
 
 #define VC0706_CMD_TAKE_PHOTO 	0x36 /*(Take Photo)*/
 #define VC0706_CMD_STOP_CAPTURE 0x36 /*(Stop Capture)*/
@@ -161,4 +161,32 @@ uint8_t VC0706_ReadImageBlock(uint8_t *image_buffer, uint32_t start_address) {
     return status == HAL_OK;
 }
 
+uint8_t VC0706_SetResolution(uint8_t resolution) {
+    uint8_t resolutionCommand[] = {0x05, 0x04, 0x01, 0x00, 0x19, resolution}; // WRITE_DATA command parameters
+    VC0706_SendCommand(VC0706_CMD_SET_IMAGE_RES, resolutionCommand, sizeof(resolutionCommand));
+
+    uint8_t response[6];
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 1000); // Timeout of 1 second
+
+    if (status != HAL_OK) {
+        return 0;
+    }
+
+    // Expected response: 0x76 0x00 0x31 0x00 0x00
+    return response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x31 && response[3] == 0x00;
+}
+
+uint8_t VC0706_Reset(void) {
+    uint8_t resetCommand[] = {0x00};
+    VC0706_SendCommand(VC0706_CMD_RESET, resetCommand, sizeof(resetCommand));
+
+    uint8_t response[5];
+    HAL_StatusTypeDef status = HAL_UART_Receive(&huart3, response, sizeof(response), 10000);
+
+    if (status != HAL_OK) {
+    	return 0;
+    }
+
+    return (response[0] == 0x76 && response[1] == 0x00 && response[2] == 0x26 && response[3] == 0x00); // Check if reset was successful
+}
 

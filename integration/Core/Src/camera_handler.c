@@ -20,6 +20,7 @@
 #define CAMERA_PROCESS_CHUNKS 10
 #define CAMERA_READ_IMG_SIZE 32
 #define CAMERA_READ_ACK_SIZE 10
+#define CAMERA_RES 0x22 /* 0x11 = (320*240), 0x00 = (640*480), 0x22 = (160*120) */
 
 extern TIM_HandleTypeDef CAM_TIMER_HANDLE;
 extern UART_HandleTypeDef CAM_UART_HANDLE;
@@ -53,6 +54,10 @@ void camera_init(void) {
 
 	//  has to be mod 100 bcz file names have to be like 8 chars
 	rand_seed = rand() % 100;
+//	VC0706_SetResolution(CAMERA_RES);
+//	HAL_Delay(1000);
+//	VC0706_Reset();
+//	HAL_Delay(2500);
 
 	camera_ready = true;
 	printf(" Successful!\n\r");
