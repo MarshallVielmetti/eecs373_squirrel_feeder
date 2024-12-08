@@ -32,7 +32,7 @@ void ir_sensor_init() {
 	printf("Initializing IR Sensor...");
 	// make sure doesn't auto trigger without readings
 	for (uint8_t i = 0; i < NUM_MEASUREMENTS_TO_AVG; i++) {
-		distance_measurements[i] = 1000;
+		distance_measurements[i] = 0;
 	}
 	printf(" Successful!\n\r");
 }
@@ -44,12 +44,7 @@ static float read_distance() {
 	 HAL_ADC_PollForConversion(&IR_ADC_HANDLE, 0xFFFFFFFF);//wait for conversion to finish
 	 ADC_VAL = HAL_ADC_GetValue(&IR_ADC_HANDLE);//retrieve value
 
-	 float voltage = (3.3* ADC_VAL)/4025.0;
-
-	 // TODO  - special conversion if we need to
-	 float distance = voltage;
-
-	 return distance;
+	 return ADC_VAL;
 }
 
 void ir_sensor_interrupt_routine() {
@@ -66,6 +61,12 @@ float get_cur_distance_average() {
 	}
 
 	return ttl / NUM_MEASUREMENTS_TO_AVG;
+}
+
+void zero_averages() {
+	for (uint8_t i = 0; i < NUM_MEASUREMENTS_TO_AVG; i++) {
+		distance_measurements[i] = 0;
+	}
 }
 
 

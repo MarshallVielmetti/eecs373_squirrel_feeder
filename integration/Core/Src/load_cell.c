@@ -16,10 +16,10 @@
  */
 
 // scaling
-#define PS0_TARE 8482978
+#define PS0_TARE 8532000
 //static uint32_t tare = 8482978; // set to zero value
-static float knownOriginal = 1;  // in milli gram
-static float knownHX711 = 1;
+static float knownOriginal = 171000;  // in milli gram
+static float knownHX711 = -65335;
 
 #define NUM_PS_SAMPLES 5
 

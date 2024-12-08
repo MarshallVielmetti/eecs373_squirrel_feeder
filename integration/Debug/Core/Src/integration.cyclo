@@ -2,7 +2,7 @@
 ../Core/Src/integration.c:69:6:main_isr	6
 ../Core/Src/integration.c:97:13:waiting_for_squirrel_isr	2
 ../Core/Src/integration.c:106:13:detected_squirrel_isr	1
-../Core/Src/integration.c:117:13:dispensing_isr	4
-../Core/Src/integration.c:156:13:cooldown_isr	2
-../Core/Src/integration.c:168:13:out_of_food_isr	2
-../Core/Src/integration.c:179:9:get_feeder	1
+../Core/Src/integration.c:120:13:dispensing_isr	4
+../Core/Src/integration.c:159:13:cooldown_isr	2
+../Core/Src/integration.c:172:13:out_of_food_isr	2
+../Core/Src/integration.c:183:9:get_feeder	1

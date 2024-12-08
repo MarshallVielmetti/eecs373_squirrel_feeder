@@ -85,6 +85,8 @@ void Error_Handler(void);
 #define ILI9341_DC_GPIO_Port GPIOF
 #define ILI9341_RES_Pin GPIO_PIN_13
 #define ILI9341_RES_GPIO_Port GPIOE
+#define SD_FROCK_Pin GPIO_PIN_13
+#define SD_FROCK_GPIO_Port GPIOB
 #define CAM_TX_Pin GPIO_PIN_8
 #define CAM_TX_GPIO_Port GPIOD
 #define CAM_RX_Pin GPIO_PIN_9
@@ -113,6 +115,9 @@ void Error_Handler(void);
 #define IR_ADC_HANDLE hadc1
 #define PS_TIMER_HANDLE htim2
 #define CAM_UART_HANDLE huart3
+
+//#define SD_FROCK_Port GPIOB
+//#define SD_FROCK_Pin GPIO_PIN_13
 
 #define IR0_ADC_CHANNEL ADC_CHANNEL_13
 #define IR1_ADC_CHANNEL ADC_CHANNEL_14

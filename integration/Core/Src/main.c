@@ -160,8 +160,20 @@ int main(void)
   printf("#########################################################\n\r");
   printf("\n\r\n\r");
 
+  HAL_GPIO_WritePin(SD_FROCK_GPIO_Port, SD_FROCK_Pin, 0);
+
+  // 10 second startup delay to perform the SD card magic
+  HAL_Delay(3000);
+
+  HAL_GPIO_WritePin(SD_FROCK_GPIO_Port, SD_FROCK_Pin, 1);
+  HAL_Delay(1000);
+
   fres = f_mount(&FatFs, "", 1); //1=mount now
-  while (fres != FR_OK);
+  while (fres != FR_OK) {
+	  printf("FRUCK\n\r");
+  }
+
+  printf("FROCK\n\r");
 
   HAL_NVIC_SetPriority(TIM1_BRK_TIM15_IRQn, 3, 0);
   HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 3, 0);
@@ -732,6 +744,9 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(ILI9341_RES_GPIO_Port, ILI9341_RES_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(SD_FROCK_GPIO_Port, SD_FROCK_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, SD_CS_Pin|M1_1_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PS1_CLK_Pin M1_2_Pin M1_3_Pin ILI9341_CS_Pin
@@ -789,13 +804,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF3_TIM1_COMP1;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB12 PB13 PB15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_15;
+  /*Configure GPIO pins : PB12 PB15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF13_SAI2;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : SD_FROCK_Pin */
+  GPIO_InitStruct.Pin = SD_FROCK_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(SD_FROCK_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SD_CS_Pin M1_1_Pin */
   GPIO_InitStruct.Pin = SD_CS_Pin|M1_1_Pin;

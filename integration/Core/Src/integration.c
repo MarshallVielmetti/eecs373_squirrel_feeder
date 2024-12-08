@@ -25,9 +25,9 @@ extern TIM_HandleTypeDef LCD_TIMER_HANDLE;
 // DECLARATION OF FEEDER OBJECT
 static Feeder feeder;
 
-#define IR_DISTANCE_THRESHOLD 1.5 	// Threshold to determine IR sensor trigger - Need to confirm voltage vs. distance for IR sensor reading
-#define PS_FOOD_THRESHOLD 5000		// Max weight (mg) of food on tray
-#define PS_RESET_THRESHOLD 10000	// Put your hand on the feeder to reset it from the out_of_food state after refill
+#define IR_DISTANCE_THRESHOLD 1200 	// Threshold to determine IR sensor trigger - Need to confirm voltage vs. distance for IR sensor reading
+#define PS_FOOD_THRESHOLD 15000		// Max weight (mg) of food on tray
+#define PS_RESET_THRESHOLD 100000	// Put your hand on the feeder to reset it from the out_of_food state after refill
 #define COOLDOWN_ISR_ITERATIONS 20
 
 #define MIN_DISPENSE_ITERATIONS 5
@@ -111,6 +111,9 @@ static void detected_squirrel_isr() {
 	motor_start();
 
 	feeder.state = DISPENSING;
+
+	// clear IR camera buffer
+	zero_averages();
 }
 
 static uint32_t times_dispensed = 0;
@@ -154,6 +157,7 @@ static void dispensing_isr() {
  */
 static uint32_t cooldown_cur_iteration = 0;
 static void cooldown_isr(void) {
+
 	cooldown_cur_iteration += 1;
 
 	printf("Current cooldown iteration: %d\n\r", cooldown_cur_iteration);
