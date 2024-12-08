@@ -30,8 +30,8 @@ static Feeder feeder;
 #define PS_RESET_THRESHOLD 100000	// Put your hand on the feeder to reset it from the out_of_food state after refill
 #define COOLDOWN_ISR_ITERATIONS 20
 
-#define MIN_DISPENSE_ITERATIONS 5
-#define MAX_DISPENSE_ITERATIONS 10
+#define MIN_DISPENSE_ITERATIONS 3
+#define MAX_DISPENSE_ITERATIONS 7
 
 
 void init_peripherals() {
@@ -67,7 +67,7 @@ static void out_of_food_isr();
 
 // main program logic interrupt routine
 void main_isr() {
-	printf("#### Main Service Routine ###\n\r");
+	printf("\n\r\n\r#### Main Service Routine ###\n\r");
 
 	// send the feeder state to the lcd and update it
 	switch (feeder.state) {
@@ -95,7 +95,7 @@ void main_isr() {
 }
 
 static void waiting_for_squirrel_isr() {
-	printf("Current Distance Reading: %f", get_cur_distance_average());
+	printf("Current Distance Reading: %f\n\r", get_cur_distance_average());
 
 	if(get_cur_distance_average() > IR_DISTANCE_THRESHOLD) {
 		printf("DETECTED SQUIRREL!\n\r");
@@ -119,7 +119,7 @@ static void detected_squirrel_isr() {
 static uint32_t times_dispensed = 0;
 static void dispensing_isr() {
 	printf("Times Dispensed: %d\n\r", times_dispensed);
-	printf("PS reading: %d,  Threshold: %d\n\r", ps_get_reading(), PS_FOOD_THRESHOLD);
+	printf("PS reading: %d,  Threshold: %d (mg)\n\r", ps_get_reading(), PS_FOOD_THRESHOLD);
 
 	if (ps_get_reading() >= PS_FOOD_THRESHOLD && times_dispensed >= MIN_DISPENSE_ITERATIONS) {
 		printf("Transitioning to COOLDOWN\n\r");
